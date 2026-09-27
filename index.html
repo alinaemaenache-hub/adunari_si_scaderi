@@ -1,0 +1,1108 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0F1530">
+<title>Lumea Sofiei</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+img{max-width:100%}
+:root{
+  color-scheme:dark;
+  --bg:#0F1530; --bg2:#151D3F; --panel:#1A2348; --panel2:#222D5A; --line:#2F3B72; --text:#EEF1FF; --muted:#98A3D4;
+  --mag:#FF4FA3; --magD:#C92F7B; --teal:#22D3C5; --tealD:#139C91; --gold:#FFC23D; --goldD:#C98E0C; --violet:#8B7BFF; --bad:#FF6B7A;
+  --r:18px;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{margin:0;background:radial-gradient(1200px 600px at 80% -10%,#2A2170 0%,transparent 60%),radial-gradient(900px 500px at -10% 110%,#0E3B52 0%,transparent 60%),var(--bg);background-color:var(--bg);background-attachment:fixed;color:var(--text);font-family:"Rubik",system-ui,sans-serif;font-size:17px;-webkit-tap-highlight-color:transparent}
+button{font-family:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:focus-visible,input:focus-visible{outline:3px solid var(--teal);outline-offset:3px}
+h1,h2,h3{font-weight:800;margin:0;line-height:1.1;text-wrap:balance;letter-spacing:-.01em}
+.wrap{max-width:760px;margin:0 auto;padding-inline:16px;padding-block:14px 40px}
+.screen{display:flex;flex-direction:column;gap:14px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.grow{flex:1;min-width:0}
+.muted{color:var(--muted)}
+.center{text-align:center}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.panel{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.btn{font-weight:800;font-size:19px;padding:13px 20px;border-radius:14px;background:var(--mag);color:#fff;box-shadow:0 4px 0 var(--magD);transition:transform .08s;letter-spacing:.01em}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--magD)}
+.btn.big{font-size:22px;padding:16px 22px;width:100%}
+.btn.teal{background:var(--teal);color:#062A2A;box-shadow:0 4px 0 var(--tealD)}
+.btn.gold{background:var(--gold);color:#2B1D00;box-shadow:0 4px 0 var(--goldD)}
+.btn.ghost{background:var(--panel2);color:var(--text);box-shadow:0 4px 0 #111833;border:1px solid var(--line)}
+.btn.small{font-size:15px;padding:9px 13px;border-radius:12px}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;background:var(--panel2);border:1px solid var(--line);font-weight:700;font-size:14px}
+
+/* home: player card */
+.player{display:grid;grid-template-columns:120px 1fr;gap:16px;align-items:center;padding:14px}
+.avframe{border-radius:16px;overflow:hidden;aspect-ratio:200/280;position:relative}
+.avframe svg{width:100%;height:100%;display:block}
+.lvl{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.lvl .n{font-size:15px;font-weight:800;color:#2B1D00;background:var(--gold);padding:3px 10px;border-radius:8px}
+.rank{font-weight:700;color:var(--gold)}
+.xpbar{height:14px;background:#0E1430;border-radius:999px;overflow:hidden;border:1px solid var(--line);margin-top:10px}
+.xpbar i{display:block;height:100%;background:linear-gradient(90deg,var(--violet),var(--mag));border-radius:999px;transition:width .8s ease}
+.xptext{font-size:14px;font-weight:700;color:var(--muted);margin-top:6px;font-variant-numeric:tabular-nums}
+.duo{display:grid;grid-template-columns:1.4fr 1fr;gap:14px}
+.streak{display:flex;align-items:center;gap:12px}
+.streak .big{font-size:40px;font-weight:900;line-height:1;font-variant-numeric:tabular-nums}
+.streak>svg{width:44px;height:44px}
+.week{display:flex;gap:6px;margin-top:12px}
+.wd{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;font-weight:700;color:var(--muted)}
+.wd i{width:100%;max-width:30px;height:8px;border-radius:4px;background:#0E1430;border:1px solid var(--line)}
+.wd.on i{background:var(--gold);border-color:var(--gold)}
+.wd.today span{color:var(--text)}
+.badgeprev{display:flex;flex-direction:column;justify-content:space-between;gap:8px;color:var(--text)}
+.badgeprev .icons{display:flex;gap:4px;flex-wrap:wrap}
+.badgeprev .icons svg{width:34px;height:34px}
+.mission .stg{display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:center;padding:11px 4px;border-top:1px solid var(--line);width:100%;text-align:left}
+.mission .stg.first{border-top:0}
+.stg .num{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-weight:800;background:#0E1430;border:1px solid var(--line)}
+.stg.done .num{background:#0E1430;border-color:var(--line);color:var(--teal)}
+.stg.next .num{background:var(--mag);border-color:var(--mag)}
+.stg .t{font-weight:700}
+.stg .s{font-size:13px;color:var(--muted);font-weight:600}
+.stg .st{font-size:14px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;text-align:right}
+.stg.done .st{color:var(--teal)}
+.stg.skip{opacity:.45}
+.nav{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.gsec h3{font-size:20px;margin-bottom:10px}
+.gbody{font-weight:500;line-height:1.55}
+.gbody p{margin:0 0 8px}.gbody p:last-child{margin-bottom:0}
+.gbody ol,.gbody ul{margin:0 0 8px;padding-left:22px}.gbody li{margin-bottom:4px}
+.gbody td{border-bottom:1px solid var(--line)}
+.gbody td:last-child{text-align:right;white-space:nowrap;color:var(--gold)}
+.gvis{margin:0 0 12px;display:flex;flex-direction:column;align-items:stretch}
+.gvis .vert,.tourvis .vert{font-size:36px}
+.tourvis{display:flex;flex-direction:column;align-items:stretch;justify-content:center;min-height:120px;background:#0E1430;border:1px solid var(--line);border-radius:14px;padding:14px}
+.tourvis .vert{margin:0 auto}
+.gvis .streak{gap:8px}.gvis .streak svg{width:40px;height:40px}
+.demo-steps{display:flex;gap:8px;justify-content:center}
+.demo-steps .num{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-weight:800;background:#0E1430;border:1px solid var(--line)}
+.demo-steps .num.d{background:var(--teal);border-color:var(--teal);color:#062A2A}
+.demo-steps .num.n{background:var(--mag);border-color:var(--mag)}
+.vert.demo .gstep{position:relative}
+.vert.demo .gstep::after{position:absolute;top:-10px;right:-8px;font-size:12px;font-weight:800;background:var(--gold);color:#2B1D00;border-radius:999px;width:18px;height:18px;display:grid;place-items:center;line-height:1}
+.vert.demo .g1::after{content:"1"}.vert.demo .g2::after{content:"2"}
+.dots{display:flex;gap:6px;justify-content:center}.dots i{width:8px;height:8px;border-radius:50%;background:var(--line)}.dots i.on{background:var(--teal);width:22px;border-radius:4px}
+.nav .btn{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:15px;padding:12px 6px}
+.nav svg{width:26px;height:26px}
+
+/* practice */
+.ptop{display:flex;align-items:center;gap:8px}
+.timer{flex:1;height:32px;border-radius:10px;background:#0E1430;border:1px solid var(--line);position:relative;overflow:hidden}
+.timer .fill{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,var(--tealD),var(--teal));transition:width .25s linear}
+.timer.warn .fill{background:linear-gradient(90deg,var(--goldD),var(--gold))}
+.timer.over .fill{background:repeating-linear-gradient(45deg,#5B4BD6,#5B4BD6 10px,#6D5EF0 10px,#6D5EF0 20px);width:100%!important}
+.timer .lbl{position:absolute;inset:0;display:grid;place-items:center;font-weight:800;font-size:16px;font-variant-numeric:tabular-nums;text-shadow:0 1px 2px rgba(0,0,0,.4)}
+.track{position:relative;height:44px;background:#0E1430;border:1px solid var(--line);border-radius:12px}
+.track .line{position:absolute;left:22px;right:22px;top:50%;height:2px;background:repeating-linear-gradient(90deg,var(--line) 0 8px,transparent 8px 14px)}
+.track .mk{position:absolute;top:50%;width:36px;height:36px;margin:-18px 0 0 -18px;transition:left .3s ease}
+.track .mk.me{border-radius:50%;overflow:hidden;background:var(--panel2);border:2px solid var(--mag)}
+.track .mk.me svg{width:100%;height:100%}
+.track .mk.ghost{display:grid;place-items:center}
+.track .flag{position:absolute;right:6px;top:50%;margin-top:-12px;width:24px;height:24px}
+.pace{font-weight:700;font-size:14px;text-align:center;min-height:18px;color:var(--muted)}
+.pace.ahead{color:var(--gold)}.pace.mid{color:#C9D2E8}.pace.behind{color:#FF9A7A}
+.medalbig{display:flex;align-items:center;justify-content:center;gap:12px;text-align:left}
+.qcard{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:22px;padding:18px 12px;text-align:center;min-height:170px;display:flex;flex-direction:column;justify-content:center;gap:10px}
+.qnum{font-weight:700;color:var(--muted);font-size:13px;letter-spacing:.12em;text-transform:uppercase}
+.eq{font-weight:800;font-size:clamp(44px,12vw,74px);line-height:1.1;display:flex;justify-content:center;align-items:center;gap:.22em;flex-wrap:wrap;font-variant-numeric:tabular-nums}
+.slot{min-width:1.4em;padding:0 .15em;border-radius:14px;background:#0E1430;border:3px dashed var(--violet);line-height:1.15}
+.slot.filled{border-style:solid}
+.slot.good{border-color:var(--teal);color:var(--teal)}
+.slot.bad{border-color:var(--bad);color:var(--bad)}
+.vert{display:inline-grid;gap:6px;align-items:center;font-weight:800;font-size:clamp(40px,11vw,64px);line-height:1.1;font-variant-numeric:tabular-nums;margin:0 auto}
+.vert .op{padding-right:.15em;text-align:center;min-width:.6em;color:var(--muted)}
+.vert .cell{width:.95em;height:1.2em;display:grid;place-items:center}
+.vert .bar{grid-column:1/-1;height:4px;background:var(--text);border-radius:2px;margin:2px 0}
+.vert .cell.u{background:#0E1430;border:3px dashed var(--violet);border-radius:10px}
+.vert .cell.u.next{border:3px solid var(--mag);animation:blink 1s infinite}
+@keyframes blink{50%{border-color:#6B2A55}}
+.urow{display:contents}
+.urow.good .cell.u{border:3px solid var(--teal);color:var(--teal);animation:none}
+.urow.bad .cell.u{border:3px solid var(--bad);color:var(--bad);animation:none}
+.vert .mark{width:.95em;height:.62em;border:2px dashed #475492;border-radius:8px;background:transparent;display:grid;place-items:center;padding:0;font-size:inherit;color:var(--gold)}
+.vert .mark span{font-size:.5em;line-height:1;font-weight:800}
+.vert .mark.on{border-style:solid;border-color:var(--gold);background:rgba(255,194,61,.12)}
+.note{font-weight:600;font-size:14px;color:var(--muted);line-height:1.45}
+.shake{animation:shake .4s}
+@keyframes shake{20%,60%{transform:translateX(-9px)}40%,80%{transform:translateX(9px)}}
+.msg{font-weight:800;font-size:20px;min-height:26px}
+.msg.good{color:var(--teal)}.msg.bad{color:var(--bad)}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;max-width:420px;width:100%;margin:0 auto}
+.pad button{font-weight:800;font-size:30px;height:62px;border-radius:14px;background:var(--panel2);border:1px solid var(--line);box-shadow:0 4px 0 #0B1028;font-variant-numeric:tabular-nums}
+.pad button:active{transform:translateY(3px);box-shadow:0 1px 0 #0B1028}
+.pad .ok{background:var(--teal);color:#062A2A;border-color:var(--teal);box-shadow:0 4px 0 var(--tealD)}
+.pad .del{color:var(--mag)}
+.choices{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.choices button{width:96px;height:80px;border-radius:16px;font-weight:800;font-size:38px;background:var(--panel2);border:2px solid var(--line);box-shadow:0 4px 0 #0B1028;font-variant-numeric:tabular-nums}
+.coach{position:fixed;left:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));display:flex;align-items:flex-end;gap:8px;pointer-events:none;z-index:5}
+.coach .face{width:56px;height:56px;border-radius:50%;overflow:hidden;background:var(--panel2);border:2px solid var(--mag)}
+.coach .face svg{width:100%;height:100%}
+.bubble{background:var(--text);color:var(--bg);border-radius:14px 14px 14px 4px;padding:9px 13px;font-weight:800;font-size:16px;max-width:230px;transform-origin:left bottom;transition:transform .2s,opacity .2s}
+.bubble.hide{transform:scale(.3);opacity:0}
+.problem{font-size:clamp(19px,4.4vw,23px);line-height:1.55;text-align:left;font-weight:500;max-width:62ch;margin:0 auto}
+.answerbox{font-weight:800;font-size:44px;min-width:3.6em;display:inline-block}
+.hint{background:rgba(255,194,61,.12);border:1px solid rgba(255,194,61,.4);color:#FFE3A3;border-radius:12px;padding:11px 13px;text-align:left;font-weight:600}
+
+/* overlays & result */
+.overlay{position:fixed;inset:0;background:rgba(5,8,22,.7);display:grid;place-items:center;z-index:20;padding:16px}
+.modal{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:22px;padding:22px;max-width:460px;width:100%;text-align:center;display:flex;flex-direction:column;gap:14px}
+.xpbig{font-size:56px;font-weight:900;line-height:1;background:linear-gradient(90deg,var(--violet),var(--mag));-webkit-background-clip:text;background-clip:text;color:transparent;font-variant-numeric:tabular-nums}
+.stat{display:grid;grid-template-columns:1fr auto;gap:8px 16px;text-align:left;font-weight:600}
+.stat b{font-weight:800;font-variant-numeric:tabular-nums;text-align:right}
+.stat .xp{color:var(--gold)}
+.price{display:inline-flex;align-items:center;gap:6px}
+
+/* wardrobe & badges */
+.wardrobe{display:grid;grid-template-columns:minmax(0,220px) 1fr;gap:16px;align-items:start}
+.avframe.sticky{position:sticky;top:calc(12px + env(safe-area-inset-top,0px));z-index:2;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.opts{display:flex;gap:9px;flex-wrap:wrap}
+.sw{width:42px;height:42px;border-radius:50%;border:3px solid var(--panel);box-shadow:0 0 0 1px var(--line)}
+.sw.sel{box-shadow:0 0 0 3px var(--teal)}
+.opt{padding:9px 13px;border-radius:12px;background:var(--panel2);border:1px solid var(--line);font-weight:700;font-size:14px;display:inline-flex;align-items:center;gap:6px}
+.opt.sel{background:var(--violet);border-color:var(--violet);color:#fff}
+.opt.locked{opacity:.5}
+.opt svg{width:14px;height:14px}
+label.f{font-weight:700;display:block;margin-bottom:8px;font-size:13px;color:var(--muted);letter-spacing:.1em}
+input.txt{font:inherit;font-weight:700;font-size:18px;padding:10px 13px;border-radius:12px;border:1px solid var(--line);width:100%;max-width:280px;color:var(--text);background:#0E1430}
+input.num{font:inherit;font-weight:800;font-size:17px;width:76px;padding:7px 8px;border-radius:10px;border:1px solid var(--line);color:var(--text);background:#0E1430;text-align:center}
+.bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.badge{padding:14px 10px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.badge svg{width:64px;height:64px}
+.badge.off svg{filter:grayscale(1);opacity:.3}
+.badge b{font-size:15px}
+.badge span{font-size:13px;color:var(--muted);font-weight:500;line-height:1.35}
+table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.tblwrap{overflow-x:auto}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:30}
+@media (max-width:560px){
+  .player{grid-template-columns:96px 1fr}
+  .duo{grid-template-columns:1fr}
+  .wardrobe{grid-template-columns:104px 1fr;gap:10px}
+  .wardrobe .panel{padding:12px}
+  .sw{width:36px;height:36px}
+  .pad button{height:56px;font-size:27px}
+  .coach .face{width:46px;height:46px}.bubble{font-size:14px;max-width:190px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<div class="coach" id="coach" hidden><div class="face" id="coachFace"></div><div class="bubble hide" id="bubble"></div></div>
+<canvas class="confetti" id="confetti" hidden></canvas>
+
+<script>
+(function(){
+"use strict";
+/* ---------- config ---------- */
+const STAGE={
+  1:{name:"Calcul rapid",desc:"Adunări și scăderi până la 10"},
+  2:{name:"Numărul ascuns",desc:"Găsește numărul care lipsește, până la 10"},
+  3:{name:"Numere mari",desc:"Adunări și scăderi până la 1000, în coloană"},
+  4:{name:"Detectivul numerelor",desc:"Numărul care lipsește, până la 1000"},
+  5:{name:"Problema zilei",desc:"Problemă de clasa a III-a, cu mai multe operații"}
+};
+const DEF_CFG={1:{c:25,m:2},2:{c:25,m:3},3:{c:10,m:5},4:{c:5,m:5},5:{c:1,m:5}};
+const MAXC={1:40,2:40,3:20,4:20,5:3};
+const BUSY_CFG={1:{c:12,m:1},2:{c:12,m:1.5},3:{c:5,m:2.5},4:{c:3,m:3},5:{c:1,m:5}};
+const SKINS=["#FFE4D2","#F7CFB2","#E3AC86","#B77B57","#7E5036","#FAC8D6","#DCCBF7","#BBA6F0","#C9EBC4","#C3E4F8"];
+const SKIN_NAMES=["Piele 1","Piele 2","Piele 3","Piele 4","Piele 5","Roz","Lila","Mov","Mentă","Bleu"];
+const HAIRC=["#3A2418","#7A4A2A","#C98A4A","#F2D06B","#F7F1E6","#1E1A36","#F58BBE","#9C7CF4","#6FC7F2","#5ED3A6","#E2475B"];
+const HAIRS=[["pigtails","Codițe"],["long","Lung"],["wavy","Ondulat"],["spacebuns","Două cocuri"],["bob","Bob"],["short","Scurt"]];
+const EYES=[["round","Rotunzi"],["lashes","Cu gene"],["sleepy","Visători"],["happy","Veseli"]];
+const EYEC=["#6B3E26","#3E7BE0","#3FAE6A","#8B5CF6","#E0559A","#D9A441","#1F9AA8"];
+const MOUTHS=[["smile","Zâmbet"],["open","Râs"],["cute","Drăgălaș"]];
+const OUTC=["#FF6FB5","#8B7BFF","#4FC3F7","#5ED3A6","#FFC23D","#FF7A45","#2B2F45"];
+const OUTFITS=[
+  {id:"hoodie",name:"Hanorac scurt",lvl:1},{id:"skirt",name:"Tricou și fustă",lvl:1},{id:"overall",name:"Salopetă",lvl:3},
+  {id:"puffer",name:"Geacă pufoasă",lvl:5},{id:"dress",name:"Rochiță",lvl:7},{id:"sport",name:"Echipament sport",lvl:9},
+  {id:"star",name:"Ținută cu steluțe",lvl:12}
+];
+const ACCS=[
+  {id:"none",name:"Nimic",lvl:1},{id:"bow",name:"Fundă",lvl:1},{id:"bear",name:"Urechi de ursuleț",lvl:2},{id:"bunny",name:"Urechi de iepuraș",lvl:4},
+  {id:"stars",name:"Agrafe stea",lvl:6},{id:"elf",name:"Căciulă de elf",lvl:8},{id:"phones",name:"Căști",lvl:10},{id:"crown",name:"Tiară",lvl:15}
+];
+const BGS=[
+  {id:"sky",name:"Cer",lvl:1,a:"#BFE3FF",b:"#E6D6FF",cl:true},{id:"candy",name:"Bomboană",lvl:1,a:"#FFD1E8",b:"#FFF0D6",cl:true},
+  {id:"mint",name:"Mentă",lvl:3,a:"#C9F5E4",b:"#D8ECFF",cl:true},{id:"sunset",name:"Apus",lvl:6,a:"#FFB3A7",b:"#C7A6FF",cl:true},
+  {id:"night",name:"Noapte",lvl:9,a:"#2A2170",b:"#131A3A",st:true},{id:"galaxy",name:"Galaxie",lvl:12,a:"#7A3FD8",b:"#1A0F3A",st:true}
+];
+const RANKS=[[1,"Recrută"],[3,"Exploratoare"],[5,"Strategă"],[8,"Expertă"],[11,"Maestră"],[15,"Legendă"]];
+const PROBLEMS=[
+  {t:"Într-o livadă sunt 8 rânduri a câte 9 meri. Toamna s-au mai plantat 26 de meri. Câți meri sunt acum în livadă?",a:98,u:"meri",h:"Câți meri erau la început? 8 × 9. Apoi adaugă merii plantați."},
+  {t:"Maria are 36 de timbre, iar Ioana are de 3 ori mai puține. Câte timbre au împreună cele două fete?",a:48,u:"timbre",h:"„De 3 ori mai puține” înseamnă împărțire: 36 : 3."},
+  {t:"Un elev a citit în prima zi 24 de pagini, în a doua zi de 2 ori mai multe, iar în a treia zi cu 15 pagini mai puțin decât în a doua. Câte pagini a citit în cele trei zile?",a:105,u:"pagini",h:"A doua zi: 24 × 2. A treia zi: rezultatul − 15. Apoi adună toate trei zilele."},
+  {t:"Suma a două numere este 90, iar diferența lor este 16. Care este numărul mai mare?",a:53,u:"",h:"Desenează două segmente. Dacă aduni diferența la sumă (90 + 16), obții de două ori numărul mare."},
+  {t:"Suma a două numere este 64. Un număr este de 3 ori mai mare decât celălalt. Care este numărul mai mic?",a:16,u:"",h:"Numărul mic = 1 parte, numărul mare = 3 părți. În total sunt 4 părți egale: 64 : 4."},
+  {t:"M-am gândit la un număr. L-am înmulțit cu 4, apoi am adunat 18 și am obținut 50. La ce număr m-am gândit?",a:8,u:"",h:"Mergi invers, de la final: 50 − 18, apoi împarte la 4."},
+  {t:"Un număr a fost împărțit la 6, iar rezultatul a fost micșorat cu 7. S-a obținut 2. Care este numărul?",a:54,u:"",h:"Mersul invers: 2 + 7, apoi înmulțește cu 6."},
+  {t:"Mama a cumpărat 4 kg de mere cu 6 lei kilogramul și 3 kg de pere cu 8 lei kilogramul. A plătit cu o bancnotă de 100 de lei. Cât rest a primit?",a:52,u:"lei",h:"Merele costă 4 × 6, perele 3 × 8. Adună și scade din 100."},
+  {t:"La o librărie s-au adus 7 cutii cu câte 8 caiete și 5 cutii cu câte 9 blocuri de desen. Câte obiecte s-au adus în total?",a:101,u:"obiecte",h:"Caiete: 7 × 8. Blocuri: 5 × 9. Apoi adună."},
+  {t:"Cei 28 de elevi ai unei clase se așază câte 4 la o masă. Pe fiecare masă se pun 3 pahare cu suc. Câte pahare se pun în total?",a:21,u:"pahare",h:"Câte mese sunt? 28 : 4. Apoi înmulțește cu 3."},
+  {t:"Andrei are 45 de lei. Bunica îi dă de 2 ori mai mulți lei decât avea. Apoi își cumpără o minge de 68 de lei. Câți lei îi rămân?",a:67,u:"lei",h:"Bunica îi dă 45 × 2. Câți lei are acum? Apoi scade prețul mingii."},
+  {t:"72 de bomboane se împart în mod egal la 8 copii. Fiecare copil mănâncă 3 bomboane. Câte bomboane îi rămân fiecărui copil?",a:6,u:"bomboane",h:"Câte primește fiecare? 72 : 8."},
+  {t:"Un bloc are 6 etaje cu câte 4 apartamente, plus 3 apartamente la parter. Câte apartamente are blocul?",a:27,u:"apartamente",h:"Etajele: 6 × 4. Nu uita de parter."},
+  {t:"Tata are 36 de ani, iar fiul lui are de 4 ori mai puțini ani. Câți ani va avea tata când fiul va avea 18 ani?",a:45,u:"ani",h:"Vârsta fiului: 36 : 4. Câți ani trebuie să treacă până la 18? Și tata îmbătrânește la fel."},
+  {t:"Numărul mai mic este de 8 ori mai mic decât 56. Diferența dintre numărul mai mare și cel mai mic este 35. Care este suma celor două numere?",a:49,u:"",h:"Numărul mic: 56 : 8. Numărul mare: mic + 35."},
+  {t:"Calculează, respectând ordinea operațiilor: 100 − 6 × 8 + 36 : 4.",a:61,u:"",h:"Înmulțirea și împărțirea se fac primele: 6 × 8 și 36 : 4. Apoi de la stânga la dreapta."},
+  {t:"O bibliotecă are 3 rafturi cu câte 9 cărți de povești și 4 rafturi cu câte 7 cărți de știință. Câte cărți mai trebuie aduse ca să fie 100 de cărți?",a:45,u:"cărți",h:"Povești: 3 × 9. Știință: 4 × 7. Câte sunt în total? Cât mai lipsește până la 100?"},
+  {t:"În grădină s-au plantat 5 rânduri a câte 10 roșii și 6 rânduri a câte 8 ardei. Cu câte roșii s-au plantat mai mult decât ardei?",a:2,u:"roșii",h:"Roșii: 5 × 10. Ardei: 6 × 8. Apoi fă diferența."},
+  {t:"În două coșuri sunt 75 de ouă. În primul coș sunt cu 15 ouă mai multe decât în al doilea. Câte ouă sunt în al doilea coș?",a:30,u:"ouă",h:"Scoate mai întâi surplusul: 75 − 15. Ce rămâne se împarte egal la cele două coșuri."},
+  {t:"Trei frați au împreună 96 de lei. Primul are 40 de lei, iar al doilea are de 2 ori mai puțini lei decât primul. Câți lei are al treilea frate?",a:36,u:"lei",h:"Al doilea: 40 : 2. Cât au primii doi împreună? Scade din 96."},
+  {t:"Un kilogram de cireșe costă 9 lei. Ana cumpără 6 kg, iar Mihai cu 2 kg mai puțin. Cât au plătit împreună?",a:90,u:"lei",h:"Câte kilograme cumpără Mihai? Apoi calculează cât plătește fiecare."},
+  {t:"O croitoreasă are 50 m de pânză. Coase 6 rochii a câte 3 m și 4 fuste a câte 2 m. Câți metri de pânză îi rămân?",a:24,u:"m",h:"Rochii: 6 × 3. Fuste: 4 × 2. Adună și scade din 50."},
+  {t:"Primul număr este de 5 ori mai mare decât 9. Al doilea număr este cu 17 mai mic decât primul. Care este suma celor două numere?",a:73,u:"",h:"Primul: 9 × 5. Al doilea: primul − 17."},
+  {t:"La un concurs, fiecare răspuns corect aduce 5 puncte, iar fiecare greșeală scade 2 puncte. Sofia a răspuns corect la 9 întrebări și a greșit 3. Câte puncte are?",a:39,u:"puncte",h:"Puncte câștigate: 9 × 5. Puncte pierdute: 3 × 2."},
+  {t:"M-am gândit la un număr. L-am împărțit la 3, am adunat 12, apoi am înmulțit cu 2 și am obținut 40. La ce număr m-am gândit?",a:24,u:"",h:"Mersul invers: 40 : 2, apoi − 12, apoi × 3."},
+  {t:"Într-o parcare sunt 9 mașini și 7 motociclete. Câte roți au în total?",a:50,u:"roți",h:"O mașină are 4 roți, o motocicletă are 2 roți."},
+  {t:"Un pachet are 8 biscuiți. Biscuiții din 6 pachete se împart în mod egal la 4 copii. Câți biscuiți primește fiecare copil?",a:12,u:"biscuiți",h:"Câți biscuiți sunt în total? 6 × 8. Apoi împarte la 4."},
+  {t:"O carte are 120 de pagini. Ioana citește câte 8 pagini pe zi, timp de 7 zile. Câte pagini mai are de citit?",a:64,u:"pagini",h:"Câte pagini a citit în 7 zile? 7 × 8."},
+  {t:"Suma a trei numere este 150. Primul număr este 45, iar al doilea este cu 18 mai mare decât primul. Care este al treilea număr?",a:42,u:"",h:"Al doilea: 45 + 18. Cât fac primele două împreună?"},
+  {t:"Un magazin a vândut luni 36 de pâini, marți de 2 ori mai multe, iar miercuri cât luni și marți la un loc. Câte pâini a vândut în cele trei zile?",a:216,u:"pâini",h:"Marți: 36 × 2. Miercuri: luni + marți. Apoi adună toate zilele."},
+  {t:"Într-o curte sunt găini și iepuri, în total 10 capete. Găinile sunt 6. Câte picioare sunt în curte?",a:28,u:"picioare",h:"Câți iepuri sunt? O găină are 2 picioare, un iepure are 4."},
+  {t:"Un dreptunghi are lungimea de 12 cm, iar lățimea este de 3 ori mai mică. Care este perimetrul dreptunghiului?",a:32,u:"cm",h:"Lățimea: 12 : 3. Perimetrul = lungime + lățime + lungime + lățime."}
+];
+const CHEERS=["Hai, Sofia, următorul!","Concentrare maximă!","Ești pe drumul cel bun!","Ochii pe exercițiu!","Întrece cronometrul!","Încă unul, poți!","Fiecare răspuns aduce XP!"];
+const GOOD=["Corect!","Excelent!","Perfect!","Bravo!","Da!","Super!"];
+
+/* ---------- icons ---------- */
+const I={
+ flame:'<svg viewBox="0 0 24 24"><path d="M12 2c1 4 5 5.5 5 10.5A5 5 0 0 1 7 12.5c0-2 1-3.5 2-4.5 0 2 1 3 2 3 0-3-1-5 1-9z" fill="#FF7A45"/><path d="M12 11c.6 2 2.5 2.8 2.5 4.8a2.5 2.5 0 0 1-5 0c0-1.3.8-2 1.3-2.6.2 1 .6 1.3 1 1.3 0-1.3-.3-2.3.2-3.5z" fill="#FFC23D"/></svg>',
+ flameOff:'<svg viewBox="0 0 24 24"><path d="M12 2c1 4 5 5.5 5 10.5A5 5 0 0 1 7 12.5c0-2 1-3.5 2-4.5 0 2 1 3 2 3 0-3-1-5 1-9z" fill="#2F3B72"/></svg>',
+ shield:'<svg viewBox="0 0 24 24" width="18" height="18"><path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5z" fill="#22D3C5"/><path d="M8.5 12l2.5 2.5 4.5-5" stroke="#062A2A" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>',
+ flag:'<svg viewBox="0 0 24 24"><rect x="4" y="2" width="2.2" height="20" rx="1.1" fill="#98A3D4"/><path d="M6 3h13l-3 4.5 3 4.5H6z" fill="#FF4FA3"/></svg>',
+ shirt:'<svg viewBox="0 0 24 24"><path d="M8 3l-5 3 2 5 2-1v11h10V10l2 1 2-5-5-3a4 4 0 0 1-8 0z" fill="#8B7BFF"/></svg>',
+ medal:'<svg viewBox="0 0 24 24"><path d="M7 2h4l2 6H9zM13 2h4l-2 6h-4z" fill="#FF4FA3"/><circle cx="12" cy="15" r="6.5" fill="#FFC23D"/><path d="M12 11.5l1.1 2.2 2.4.3-1.8 1.6.5 2.4-2.2-1.2-2.2 1.2.5-2.4-1.8-1.6 2.4-.3z" fill="#fff"/></svg>',
+ book:'<svg viewBox="0 0 24 24"><path d="M4 4h6a3 3 0 0 1 2 1 3 3 0 0 1 2-1h6v15h-6a2 2 0 0 0-2 1 2 2 0 0 0-2-1H4z" fill="#FFC23D"/><path d="M12 5v15" stroke="#2B1D00" stroke-width="1.5"/></svg>',
+ chart:'<svg viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="9" rx="1" fill="#22D3C5"/><rect x="10" y="7" width="4" height="14" rx="1" fill="#8B7BFF"/><rect x="17" y="3" width="4" height="18" rx="1" fill="#FF4FA3"/></svg>',
+ lock:'<svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2" fill="currentColor"/><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="2" fill="none"/></svg>',
+ pause:'<svg viewBox="0 0 24 24" width="22" height="22"><rect x="6" y="5" width="4" height="14" rx="1.5" fill="currentColor"/><rect x="14" y="5" width="4" height="14" rx="1.5" fill="currentColor"/></svg>',
+ sound:'<svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 8a5 5 0 0 1 0 8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>',
+ mute:'<svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 9l5 6M21 9l-5 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+ ghost:'<svg viewBox="0 0 24 24" width="28" height="28"><circle cx="12" cy="12" r="9" fill="none" stroke="#FFC23D" stroke-width="2.5" stroke-dasharray="3 3"/><path d="M12 7v5l3 2" stroke="#FFC23D" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg>'
+};
+
+/* ---------- badges ---------- */
+function hexBadge(color,glyph){return `<svg viewBox="0 0 64 64"><path d="M32 3l25 14.5v29L32 61 7 46.5v-29z" fill="${color}"/><path d="M32 9l20 11.5v23L32 55 12 43.5v-23z" fill="rgba(0,0,0,.18)"/><g fill="#fff" stroke="#fff">${glyph}</g></svg>`;}
+const G={
+  flag:'<path d="M24 18v30" stroke-width="3" fill="none"/><path d="M26 19h16l-4 6 4 6H26z" stroke="none"/>',
+  flame:'<path d="M32 16c2 7 9 9.5 9 18a9 9 0 0 1-18 0c0-4 2-6.5 4-8 0 3 1.5 5 3.5 5 0-5-2-8.5 1.5-15z" stroke="none"/>',
+  bolt:'<path d="M35 14L22 34h9l-2 16 13-20h-9z" stroke="none"/>',
+  check:'<path d="M20 33l8 8 16-17" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>',
+  minus:'<path d="M20 34h24" stroke-width="5" stroke-linecap="round"/><circle cx="32" cy="23" r="3.5" stroke="none"/>',
+  bulb:'<path d="M32 15a11 11 0 0 0-6 20v5h12v-5a11 11 0 0 0-6-20z" stroke="none"/><rect x="27" y="43" width="10" height="4" rx="1" stroke="none"/>',
+  eye:'<circle cx="29" cy="29" r="9" stroke-width="4" fill="none"/><path d="M36 36l9 9" stroke-width="5" stroke-linecap="round"/>',
+  clock:'<circle cx="32" cy="32" r="13" stroke-width="4" fill="none"/><path d="M32 24v8l6 4" stroke-width="4" fill="none" stroke-linecap="round"/>',
+  star:'<path d="M32 15l4.6 9.6 10.4 1.3-7.7 7.1 2 10.3L32 38.2l-9.3 5.1 2-10.3-7.7-7.1 10.4-1.3z" stroke="none"/>',
+  crown:'<path d="M18 42l-2-18 9 7 7-12 7 12 9-7-2 18z" stroke="none"/>'
+};
+const BADGES=[
+  {id:"first",name:"Prima misiune",desc:"Termină un antrenament complet.",c:"#3F7BFF",g:G.flag,test:s=>Object.values(s.days).some(d=>d.done)},
+  {id:"s7",name:"Serie de 7",desc:"O săptămână întreagă, zi de zi.",c:"#FF7A45",g:G.flame,test:s=>s.streak.best>=7},
+  {id:"s14",name:"Serie de 14",desc:"Două săptămâni la rând.",c:"#FF4FA3",g:G.flame,test:s=>s.streak.best>=14},
+  {id:"s30",name:"Serie de 30",desc:"O lună fără pauză.",c:"#8B7BFF",g:G.flame,test:s=>s.streak.best>=30},
+  {id:"s60",name:"Serie de 60",desc:"Două luni fără pauză.",c:"#C98E0C",g:G.crown,test:s=>s.streak.best>=60},
+  {id:"gold10",name:"Zece de aur",desc:"Câștigă 10 medalii de aur.",c:"#D9A441",g:G.star,test:s=>s.stats.gold>=10},
+  {id:"gold50",name:"Colecționara de aur",desc:"Câștigă 50 de medalii de aur.",c:"#C98E0C",g:G.crown,test:s=>s.stats.gold>=50},
+  {id:"goldday",name:"Zi de aur",desc:"Aur la toate etapele dintr-o zi cu antrenament întreg.",c:"#FF7A45",g:G.clock,test:s=>s.stats.goldDay>=1},
+  {id:"perfect",name:"Fără greșeală",desc:"O zi cu antrenament întreg, toate răspunsurile corecte din prima.",c:"#139C91",g:G.check,test:s=>s.stats.perfectDay>=1},
+  {id:"fast",name:"Fulger",desc:"Etapa 1 completă (25 de exerciții) în cel mult 1:15, cu minimum 23 corecte din prima.",c:"#3F7BFF",g:G.bolt,test:s=>s.stats.fast>=1},
+  {id:"records",name:"Recordmena",desc:"Îți bați propriul record de 10 ori.",c:"#FF4FA3",g:G.bolt,test:s=>s.stats.records>=10},
+  {id:"borrow",name:"Maestra împrumutului",desc:"100 de scăderi cu împrumut corecte.",c:"#8B7BFF",g:G.minus,test:s=>s.stats.borrow>=100},
+  {id:"solver",name:"Rezolvitoare",desc:"15 probleme rezolvate din prima încercare.",c:"#139C91",g:G.bulb,test:s=>s.stats.problemsFirst>=15},
+  {id:"detective",name:"Detectiva",desc:"40 de probleme rezolvate din prima încercare.",c:"#3F7BFF",g:G.eye,test:s=>s.stats.problemsFirst>=40},
+  {id:"lvl5",name:"Nivelul 5",desc:"Ajunge la nivelul 5.",c:"#FF7A45",g:G.star,test:s=>levelInfo(s.xp).level>=5},
+  {id:"lvl10",name:"Nivelul 10",desc:"Ajunge la nivelul 10.",c:"#C98E0C",g:G.crown,test:s=>levelInfo(s.xp).level>=10}
+];
+function levelInfo(xp){let L=1,need=200,rest=xp||0;while(rest>=need){rest-=need;L++;need=200+75*(L-1);}return{level:L,into:rest,need};}
+const MEDALS={3:{name:"Aur",c:"#FFC23D",xp:15},2:{name:"Argint",c:"#C9D2E8",xp:8},1:{name:"Bronz",c:"#D98A4E",xp:3}};
+const GOLD_T=.7, SILVER_T=.9;
+function medalOf(stage,firstTry,correct,tot,t,lim,hint){
+  const r=t/lim, acc=firstTry/tot;
+  if(stage===5){if(firstTry===tot&&!hint&&r<=.6)return 3;if(correct===tot&&r<=1)return 2;return 1;}
+  if(acc>=.9&&r<=GOLD_T)return 3;if(acc>=.8&&r<=SILVER_T)return 2;return 1;
+}
+function medalSVG(m,size){const d=MEDALS[m]||MEDALS[1];return `<svg viewBox="0 0 24 24" width="${size||22}" height="${size||22}" aria-label="${d.name}"><path d="M7 1h4l2 6H9zM13 1h4l-2 6h-4z" fill="#FF4FA3"/><circle cx="12" cy="15" r="7.5" fill="${d.c}"/><circle cx="12" cy="15" r="5" fill="none" stroke="rgba(0,0,0,.18)" stroke-width="1.5"/><path d="M12 11.6l1.1 2.2 2.4.3-1.8 1.6.5 2.4-2.2-1.2-2.2 1.2.5-2.4-1.8-1.6 2.4-.3z" fill="rgba(255,255,255,.75)"/></svg>`;}
+function rankOf(L){let r=RANKS[0][1];RANKS.forEach(([l,n])=>{if(L>=l)r=n;});return r;}
+
+/* ---------- avatar ---------- */
+function shade(hex,amt){const n=parseInt(hex.slice(1),16);let r=(n>>16)+amt,g=(n>>8&255)+amt,b=(n&255)+amt;r=Math.max(0,Math.min(255,r));g=Math.max(0,Math.min(255,g));b=Math.max(0,Math.min(255,b));return "#"+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);}
+let avUid=0;
+const INK="#2A1B3D";
+function eyeSVG(cx,cy,style,ic,side,skin){
+  // side: -1 left eye, 1 right eye (outer corner direction)
+  let s="";
+  const lash=`<path d="M${cx-14} ${cy-7} Q${cx} ${cy-21} ${cx+14} ${cy-7}" stroke="${INK}" stroke-width="4.2" fill="none" stroke-linecap="round"/>`;
+  const flick=`<path d="M${cx+13*side} ${cy-8} l${6*side} -5 M${cx+11*side} ${cy-12} l${4*side} -6" stroke="${INK}" stroke-width="2.6" stroke-linecap="round"/>`;
+  if(style==="happy"){
+    return `<path d="M${cx-12} ${cy+3} Q${cx} ${cy-12} ${cx+12} ${cy+3}" stroke="${INK}" stroke-width="4.5" fill="none" stroke-linecap="round"/>`+`<path d="M${cx+12*side} ${cy} l${5*side} -4" stroke="${INK}" stroke-width="2.6" stroke-linecap="round"/>`;
+  }
+  s+=`<ellipse cx="${cx}" cy="${cy}" rx="12.5" ry="14.5" fill="#fff"/>`;
+  s+=`<circle cx="${cx}" cy="${cy+2}" r="10.5" fill="${ic}"/><path d="M${cx-10.5} ${cy+2} a10.5 10.5 0 0 1 21 0z" fill="#000" opacity=".22"/>`;
+  s+=`<circle cx="${cx}" cy="${cy+3}" r="4.8" fill="${INK}"/><circle cx="${cx+4}" cy="${cy-3}" r="3.8" fill="#fff"/><circle cx="${cx-4}" cy="${cy+7}" r="1.9" fill="#fff"/>`;
+  if(style==="sleepy"){s+=`<path d="M${cx-14} ${cy-16} H${cx+14} V${cy-3} Q${cx} ${cy-7} ${cx-14} ${cy-3}Z" fill="${skin}"/><path d="M${cx-14} ${cy-3} Q${cx} ${cy-8} ${cx+14} ${cy-3}" stroke="${INK}" stroke-width="4.2" fill="none" stroke-linecap="round"/>`;return s;}
+  s+=lash;
+  if(style==="lashes")s+=flick+`<path d="M${cx-6} ${cy+15} l-1 3 M${cx} ${cy+16} v3 M${cx+6} ${cy+15} l1 3" stroke="${INK}" stroke-width="1.6" stroke-linecap="round"/>`;
+  return s;
+}
+function hairBack(style,fill,tie){
+  switch(style){
+    case "long": return `<path d="M40 100 Q36 34 100 30 Q164 34 160 100 L166 194 Q150 210 132 198 Q116 212 100 200 Q84 212 68 198 Q50 210 34 194Z" fill="${fill}"/>`;
+    case "wavy": return `<path d="M40 100 Q36 34 100 30 Q164 34 160 100 Q176 130 162 150 Q178 176 158 200 Q140 214 126 196 L74 196 Q60 214 42 200 Q22 176 38 150 Q24 130 40 100Z" fill="${fill}"/>`;
+    case "pigtails": return `<path d="M100 30 Q40 34 40 100 L160 100 Q160 34 100 30Z" fill="${fill}"/><path d="M46 92 Q10 116 18 186 Q26 214 48 200 Q34 158 60 118Z" fill="${fill}"/><path d="M154 92 Q190 116 182 186 Q174 214 152 200 Q166 158 140 118Z" fill="${fill}"/><circle cx="46" cy="100" r="8" fill="${tie}"/><circle cx="154" cy="100" r="8" fill="${tie}"/>`;
+    case "spacebuns": return `<circle cx="52" cy="44" r="24" fill="${fill}"/><circle cx="148" cy="44" r="24" fill="${fill}"/><path d="M40 104 Q36 34 100 30 Q164 34 160 104 L162 128 L38 128Z" fill="${fill}"/><rect x="62" y="58" width="12" height="8" rx="3" fill="${tie}" transform="rotate(35 68 62)"/><rect x="126" y="58" width="12" height="8" rx="3" fill="${tie}" transform="rotate(-35 132 62)"/>`;
+    case "bob": return `<path d="M36 104 Q32 32 100 28 Q168 32 164 104 L166 148 Q146 160 132 150 L68 150 Q54 160 34 148Z" fill="${fill}"/>`;
+    case "short": return `<path d="M42 100 Q40 36 100 32 Q160 36 158 100 L156 120 L44 120Z" fill="${fill}"/>`;
+  }
+  return "";
+}
+function hairFront(style,fill){
+  if(style==="bob") return `<path d="M38 100 Q36 30 100 28 Q164 30 162 100 L158 86 Q100 74 42 86Z" fill="${fill}"/>`;
+  if(style==="wavy") return `<path d="M40 110 Q34 32 100 30 Q166 32 160 110 Q152 72 112 62 Q80 60 60 82 Q46 94 40 110Z" fill="${fill}"/>`;
+  if(style==="short") return `<path d="M40 104 Q34 32 100 30 Q166 32 160 104 Q154 78 132 68 Q128 82 110 78 Q104 66 92 70 Q80 84 66 76 Q50 84 40 104Z" fill="${fill}"/>`;
+  return `<path d="M40 104 Q34 32 100 30 Q166 32 160 104 Q152 80 138 72 Q132 88 116 84 Q112 70 100 70 Q86 86 72 80 Q66 74 60 76 Q48 84 40 104Z" fill="${fill}"/>`;
+}
+function avatarSVG(p,o){
+  o=o||{};
+  const skin=SKINS[p.skin]??SKINS[1], hc=HAIRC[p.hairColor]??HAIRC[1], tip=p.hairTip>=0?HAIRC[p.hairTip]:hc;
+  const oc=OUTC[p.outfitColor]??OUTC[0], ocD=shade(oc,-35), ocL=shade(oc,45);
+  const outfit=o.outfit||p.outfit, acc=o.acc||p.acc, hair=p.hair, ic=EYEC[p.eyeColor]??EYEC[0];
+  const gid="hg"+(++avUid);
+  let s=`<defs><linearGradient id="${gid}" gradientUnits="userSpaceOnUse" x1="0" y1="60" x2="0" y2="205"><stop offset="0" stop-color="${hc}"/><stop offset=".45" stop-color="${hc}"/><stop offset="1" stop-color="${tip}"/></linearGradient></defs>`;
+  const hf=`url(#${gid})`;
+  // hair back
+  s+=hairBack(hair,hf,oc);
+  // legs
+  s+=`<rect x="85" y="204" width="12" height="48" rx="6" fill="${skin}"/><rect x="103" y="204" width="12" height="48" rx="6" fill="${skin}"/>`;
+  // bottoms
+  const pantsC = outfit==="overall"?oc: outfit==="puffer"?"#3E4466":"#4A5A8C";
+  if(outfit==="hoodie"||outfit==="overall"){s+=`<path d="M78 198 H122 L121 250 H104 L100 214 L96 250 H79Z" fill="${pantsC}"/>`;if(outfit==="hoodie")s+=`<rect x="80" y="222" width="10" height="12" rx="2" fill="${shade(pantsC,-20)}"/><rect x="110" y="222" width="10" height="12" rx="2" fill="${shade(pantsC,-20)}"/>`;}
+  if(outfit==="skirt") s+=`<path d="M74 196 H126 L136 228 H64Z" fill="${ocL}"/><path d="M86 198 L82 228 M100 198 V228 M114 198 L118 228" stroke="${oc}" stroke-width="2" opacity=".6"/>`;
+  if(outfit==="puffer"||outfit==="sport"||outfit==="star") s+=`<path d="M76 196 H124 V220 H104 L100 212 L96 220 H76Z" fill="${outfit==='sport'?'#fff':outfit==='star'?ocD:pantsC}"/>`;
+  // shoes
+  const shoe= outfit==="star"?"#FFC23D":"#fff";
+  s+=`<path d="M74 248 H99 V263 H72 Q68 263 68 258 Q68 248 74 248Z" fill="${shoe}"/><path d="M126 248 H101 V263 H128 Q132 263 132 258 Q132 248 126 248Z" fill="${shoe}"/><rect x="68" y="259" width="31" height="5" rx="2" fill="${oc}"/><rect x="101" y="259" width="31" height="5" rx="2" fill="${oc}"/>`;
+  // arms
+  const longS=["hoodie","puffer","star"].includes(outfit);
+  const armC=longS?oc:skin;
+  s+=`<rect x="62" y="158" width="13" height="46" rx="6.5" fill="${armC}" transform="rotate(10 68 160)"/><rect x="125" y="158" width="13" height="46" rx="6.5" fill="${armC}" transform="rotate(-10 132 160)"/>`;
+  if(outfit==="puffer")s+=`<rect x="59" y="158" width="18" height="44" rx="9" fill="${oc}" transform="rotate(10 68 160)"/><rect x="123" y="158" width="18" height="44" rx="9" fill="${oc}" transform="rotate(-10 132 160)"/>`;
+  s+=`<circle cx="61" cy="204" r="7" fill="${skin}"/><circle cx="139" cy="204" r="7" fill="${skin}"/>`;
+  // torso
+  s+=`<rect x="93" y="144" width="14" height="14" rx="4" fill="${skin}"/>`;
+  const T="M74 156 Q100 150 126 156 L128 200 L72 200Z";
+  if(outfit==="hoodie"){s+=`<path d="M74 156 Q100 150 126 156 L127 192 L73 192Z" fill="${oc}"/><path d="M84 154 Q100 170 116 154" stroke="${ocD}" stroke-width="5" fill="none"/><path d="M94 160 V176 M106 160 V176" stroke="#fff" stroke-width="2" stroke-linecap="round"/><rect x="73" y="188" width="54" height="7" rx="3" fill="${ocD}"/><rect x="73" y="195" width="54" height="5" fill="${skin}"/>`;}
+  else if(outfit==="skirt"){s+=`<path d="M74 156 Q100 150 126 156 L127 198 L73 198Z" fill="#fff"/><rect x="68" y="156" width="14" height="14" rx="5" fill="#fff"/><rect x="118" y="156" width="14" height="14" rx="5" fill="#fff"/><path d="M100 170 a5 5 0 0 1 8 6 L100 184 L92 176 a5 5 0 0 1 8 -6z" fill="${oc}"/>`;}
+  else if(outfit==="overall"){s+=`<path d="${T}" fill="#fff"/><rect x="68" y="156" width="14" height="13" rx="5" fill="#fff"/><rect x="118" y="156" width="14" height="13" rx="5" fill="#fff"/><rect x="82" y="172" width="36" height="28" rx="4" fill="${oc}"/><path d="M84 174 L80 156 M116 174 L120 156" stroke="${oc}" stroke-width="5" stroke-linecap="round"/><circle cx="87" cy="176" r="2.5" fill="#FFC23D"/><circle cx="113" cy="176" r="2.5" fill="#FFC23D"/><rect x="92" y="180" width="16" height="10" rx="2" fill="${ocD}"/>`;}
+  else if(outfit==="puffer"){s+=`<path d="M70 156 Q100 148 130 156 L132 202 L68 202Z" fill="${oc}"/><path d="M70 170 H130 M69 186 H131" stroke="${ocD}" stroke-width="2.5"/><path d="M100 152 V202" stroke="${ocD}" stroke-width="2.5"/><path d="M84 152 Q100 146 116 152 L114 160 Q100 156 86 160Z" fill="${ocL}"/>`;}
+  else if(outfit==="dress"){s+=`<path d="M78 156 Q100 150 122 156 L134 226 Q100 234 66 226Z" fill="${oc}"/><ellipse cx="72" cy="162" rx="10" ry="8" fill="${oc}"/><ellipse cx="128" cy="162" rx="10" ry="8" fill="${oc}"/><path d="M78 184 H122" stroke="#fff" stroke-width="4"/><path d="M72 212 Q100 220 128 212" stroke="${ocL}" stroke-width="4" fill="none"/>`;}
+  else if(outfit==="sport"){s+=`<path d="${T}" fill="${oc}"/><rect x="67" y="156" width="15" height="14" rx="5" fill="${oc}"/><rect x="118" y="156" width="15" height="14" rx="5" fill="${oc}"/><path d="M76 158 L74 200 M124 158 L126 200" stroke="#fff" stroke-width="4"/><text x="100" y="190" font-family="Rubik,sans-serif" font-weight="800" font-size="24" fill="#fff" text-anchor="middle">7</text>`;}
+  else if(outfit==="star"){s+=`<path d="${T}" fill="${oc}"/>`;[[88,170],[110,166],[100,186],[82,190],[118,188]].forEach(([x,y])=>{s+=`<path d="M${x} ${y-5} l1.6 3.4 3.7.5-2.7 2.5.7 3.7-3.3-1.8-3.3 1.8.7-3.7-2.7-2.5 3.7-.5z" fill="#FFE27A"/>`;});s+=`<path d="M84 152 Q100 160 116 152" stroke="#FFE27A" stroke-width="3" fill="none"/>`;}
+  // head
+  s+=`<circle cx="42" cy="108" r="9" fill="${skin}"/><circle cx="158" cy="108" r="9" fill="${skin}"/>`;
+  s+=`<ellipse cx="100" cy="96" rx="60" ry="56" fill="${skin}"/>`;
+  // face
+  s+=`<path d="M64 82 Q75 77 86 81 M114 81 Q125 77 136 82" stroke="${shade(hc,-15)}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+  s+=`<g transform="translate(76 108) scale(1.22) translate(-76 -108)">${eyeSVG(76,108,p.eyes,ic,-1,skin)}</g><g transform="translate(124 108) scale(1.22) translate(-124 -108)">${eyeSVG(124,108,p.eyes,ic,1,skin)}</g>`;
+  s+=`<ellipse cx="58" cy="128" rx="9" ry="5.5" fill="#FF7FA8" opacity=".45"/><ellipse cx="142" cy="128" rx="9" ry="5.5" fill="#FF7FA8" opacity=".45"/>`;
+  s+=`<ellipse cx="100" cy="122" rx="1.8" ry="1.3" fill="${shade(skin,-50)}"/>`;
+  if(p.mouth==="open") s+=`<path d="M92 129 Q100 129 108 129 Q107 140 100 140 Q93 140 92 129Z" fill="#B8325A"/><path d="M95 136 Q100 133 105 136 Q103 140 100 140 Q97 140 95 136Z" fill="#FF8FB1"/>`;
+  else if(p.mouth==="cute") s+=`<path d="M92 130 q4 5 8 0 q4 5 8 0" stroke="${INK}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`;
+  else s+=`<path d="M93 130 Q100 137 107 130" stroke="${INK}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+  // hair front
+  s+=hairFront(hair,hf);
+  s+=`<path d="M62 52 Q80 38 102 38" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" opacity=".35"/>`;
+  // accessories
+  if(acc==="bow") s+=`<path d="M142 50 L164 36 L166 64Z" fill="${oc}"/><path d="M142 50 L122 36 L122 62Z" fill="${oc}"/><circle cx="143" cy="50" r="7" fill="${ocL}"/>`;
+  if(acc==="bear") s+=`<circle cx="58" cy="40" r="16" fill="#B07A52"/><circle cx="142" cy="40" r="16" fill="#B07A52"/><circle cx="58" cy="40" r="8" fill="#F2C9A5"/><circle cx="142" cy="40" r="8" fill="#F2C9A5"/><path d="M46 70 Q100 18 154 70" stroke="#8C5A3A" stroke-width="5" fill="none"/>`;
+  if(acc==="bunny") s+=`<ellipse cx="80" cy="14" rx="11" ry="30" fill="#fff" transform="rotate(-12 80 30)"/><ellipse cx="120" cy="14" rx="11" ry="30" fill="#fff" transform="rotate(12 120 30)"/><ellipse cx="80" cy="16" rx="5" ry="22" fill="#FFB8D2" transform="rotate(-12 80 30)"/><ellipse cx="120" cy="16" rx="5" ry="22" fill="#FFB8D2" transform="rotate(12 120 30)"/><path d="M46 70 Q100 20 154 70" stroke="#fff" stroke-width="5" fill="none"/>`;
+  if(acc==="stars"){[[60,74,1],[74,62,.8],[142,62,.9]].forEach(([x,y,k])=>{s+=`<path transform="translate(${x} ${y}) scale(${k})" d="M0 -9 l2.8 6 6.4.8-4.7 4.4 1.2 6.4L0 5.4l-5.7 3.2 1.2-6.4-4.7-4.4 6.4-.8z" fill="#FFD84D" stroke="#E0A400" stroke-width="1"/>`;});}
+  if(acc==="elf") s+=`<path d="M42 66 Q56 18 108 10 Q152 6 172 30 Q150 26 134 36 Q152 46 158 66Z" fill="#3FAE6A"/><circle cx="174" cy="30" r="9" fill="#fff"/><ellipse cx="100" cy="66" rx="62" ry="11" fill="#fff"/>`;
+  if(acc==="phones") s+=`<path d="M40 104 Q36 26 100 26 Q164 26 160 104" stroke="${INK}" stroke-width="7" fill="none"/><rect x="30" y="92" width="18" height="30" rx="8" fill="${oc}"/><rect x="152" y="92" width="18" height="30" rx="8" fill="${oc}"/>`;
+  if(acc==="crown") s+=`<path d="M76 44 L80 22 L90 36 L100 16 L110 36 L120 22 L124 44Z" fill="#FFD84D" stroke="#E0A400" stroke-width="2" stroke-linejoin="round"/><circle cx="100" cy="34" r="4" fill="#FF6FB5"/>`;
+  return s;
+}
+function bgOf(id){return BGS.find(b=>b.id===id)||BGS[0];}
+function bgSVG(b){
+  const id="bg"+(++avUid);
+  let s=`<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${b.a}"/><stop offset="1" stop-color="${b.b}"/></linearGradient></defs><rect width="200" height="280" fill="url(#${id})"/>`;
+  if(b.cl)s+=`<g fill="#fff" opacity=".75"><ellipse cx="30" cy="60" rx="30" ry="12"/><ellipse cx="52" cy="52" rx="20" ry="12"/><ellipse cx="170" cy="120" rx="34" ry="12"/><ellipse cx="150" cy="112" rx="20" ry="11"/><ellipse cx="40" cy="200" rx="28" ry="10"/></g>`;
+  if(b.st)[[20,30],[60,80],[170,40],[150,150],[30,170],[180,220],[110,20]].forEach(([x,y])=>s+=`<circle cx="${x}" cy="${y}" r="1.6" fill="#fff" opacity=".8"/>`);
+  return s;
+}
+function avatarFull(p,o){const b=bgOf((o&&o.bg)||p.bg);return `<svg viewBox="0 0 200 280" role="img" aria-label="Avatarul">${bgSVG(b)}<ellipse cx="100" cy="266" rx="46" ry="6" fill="#000" opacity=".15"/>${avatarSVG(p,o)}</svg>`;}
+function avatarHead(p){return `<svg viewBox="34 26 132 132">${avatarSVG(p)}</svg>`;}
+function fixProfile(p){
+  const d=defaultProfile();
+  const inList=(v,l)=>l.some(x=>(Array.isArray(x)?x[0]:x.id)===v);
+  if(!inList(p.hair,HAIRS))p.hair=d.hair;
+  if(!inList(p.eyes,EYES))p.eyes=d.eyes;
+  if(!inList(p.mouth,MOUTHS))p.mouth=d.mouth;
+  if(!inList(p.outfit,OUTFITS))p.outfit=d.outfit;
+  if(!inList(p.acc,ACCS))p.acc=d.acc;
+  if(!inList(p.bg,BGS))p.bg=d.bg;
+  ["skin","hairColor","eyeColor","outfitColor"].forEach(k=>{if(!(p[k]>=0))p[k]=d[k];});
+  if(p.skin>=SKINS.length)p.skin=1;if(p.hairColor>=HAIRC.length)p.hairColor=1;if(p.eyeColor>=EYEC.length)p.eyeColor=0;if(p.outfitColor>=OUTC.length)p.outfitColor=0;
+  if(!(p.hairTip>=-1&&p.hairTip<HAIRC.length))p.hairTip=-1;
+  return p;
+}
+
+/* ---------- state ---------- */
+const KEY="lumea-sofiei-v1", DOC="progress/sofia";
+function cfg(){const st=S.settings||{};const t=st.today&&st.today.date===today()?st.today.cfg:null;const base=t||st.def||DEF_CFG;const o={};for(let n=1;n<=5;n++){const x=base[n]||DEF_CFG[n];o[n]={c:x.c,m:x.m};}return o;}
+const isDefault=(n,c)=>c.c===DEF_CFG[n].c&&c.m===DEF_CFG[n].m;
+function defaultProfile(){return{created:false,name:"Sofia",skin:1,hair:"pigtails",hairColor:1,hairTip:-1,eyes:"round",eyeColor:0,mouth:"smile",outfit:"hoodie",outfitColor:0,acc:"bow",bg:"sky"};}
+function defaultState(){return{v:2,settings:{def:null,today:null},updatedAt:0,profile:defaultProfile(),xp:0,streak:{count:0,best:0,lastDay:null},shields:0,days:{},best:{},problemIdx:0,sound:true,seenTour:false,stats:{borrow:0,problems:0,problemsFirst:0,gold:0,goldDay:0,perfectDay:0,records:0,fast:0},badges:[],rules:3};}
+function merge(x){
+  const d=defaultState();if(!x||typeof x!=="object")return d;
+  const o=Object.assign(d,x);
+  o.profile=Object.assign(defaultProfile(),x.profile||{});
+  if(x.v!==2){
+    const p=o.profile;
+    o.xp=(x.totalStars||0)*5;o.v=2;["stars","totalStars","owned"].forEach(k=>delete o[k]);["pet","petName","petAcc","wall","room","hat"].forEach(k=>delete p[k]);
+    o.problemIdx=0;
+  }
+  fixProfile(o.profile);
+  o.streak=Object.assign(defaultState().streak,x.streak||{});o.stats=Object.assign(defaultState().stats,x.stats||{});
+  o.days=x.days||{};o.settings=x.settings||{def:null,today:null};o.best=x.best||{};o.badges=x.badges||[];
+  if((x.rules||0)<3){delete o.best[4];delete o.best[3];o.rules=3;o.badges=[];o.badges=BADGES.filter(b=>{try{return b.test(o);}catch(e){return false;}}).map(b=>b.id);}
+  return o;
+}
+let S=defaultState(), db=null, pending=false, chain=Promise.resolve();
+function saveLocal(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function save(){
+  S.updatedAt=Date.now();
+  const keys=Object.keys(S.days).sort();while(keys.length>90)delete S.days[keys.shift()];
+  saveLocal();
+  if(!db||pending)return;pending=true;
+  chain=chain.then(async()=>{pending=false;try{await db.doc(DOC).set(JSON.parse(JSON.stringify(S)));}catch(e){}});
+}
+async function initDb(){
+  try{
+    if(!(window.claude&&window.claude.use))return;
+    db=await window.claude.use("db");if(!db)return;
+    const snap=await db.doc(DOC).get();
+    if(snap.exists){const r=snap.data();if((r.updatedAt||0)>(S.updatedAt||0)){S=merge(JSON.parse(JSON.stringify(r)));saveLocal();if(!P)route();}else if(S.updatedAt>(r.updatedAt||0)||r.v!==2)save();}
+    else if(S.profile.created)save();
+  }catch(e){db=null;}
+}
+function newBadges(){const got=[];BADGES.forEach(b=>{if(!S.badges.includes(b.id)&&b.test(S)){S.badges.push(b.id);got.push(b);}});return got;}
+
+/* ---------- dates ---------- */
+const dk=d=>{d=d||new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");};
+const addDays=(k,n)=>{const [y,m,d]=k.split("-").map(Number);return dk(new Date(y,m-1,d+n));};
+const today=()=>dk();
+const DOW=["D","L","Ma","Mi","J","V","S"];
+function liveStreak(){const t=today(),l=S.streak.lastDay;if(!l)return 0;if(l===t||l===addDays(t,-1))return S.streak.count;if(l===addDays(t,-2)&&S.shields>0)return S.streak.count;return 0;}
+function todayRec(){const t=today();if(!S.days[t])S.days[t]={done:false,stages:{}};return S.days[t];}
+const fmt=s=>{s=Math.max(0,Math.round(s));return Math.floor(s/60)+":"+String(s%60).padStart(2,"0");};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ---------- sound ---------- */
+let AC=null;
+function beep(kind){
+  if(!S.sound)return;
+  try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const seq=kind==="good"?[660,990]:kind==="bad"?[220,180]:kind==="win"?[523,659,784,1046]:[440];
+  seq.forEach((f,i)=>{const o=AC.createOscillator(),g=AC.createGain();o.type=kind==="bad"?"triangle":"square";o.frequency.value=f;const t=AC.currentTime+i*.09;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.07,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+.15);o.connect(g).connect(AC.destination);o.start(t);o.stop(t+.17);});}catch(e){}
+}
+
+/* ---------- generators ---------- */
+const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+function choices(ans,max){const set=new Set([ans]);let g=0;while(set.size<3&&g++<60){const v=ans+R(1,3)*(Math.random()<.5?-1:1);if(v>=0&&v<=max)set.add(v);}return shuffle([...set]);}
+function genS1(k){const out=[],seen=new Set();let g=0;while(out.length<k&&g++<5000){let a,b,op;if(Math.random()<.5){op="+";a=R(1,9);b=R(1,10-a);}else{op="−";a=R(2,10);b=R(1,a);}
+  const key=a+op+b;if(seen.has(key))continue;seen.add(key);const ans=op==="+"?a+b:a-b;const mode=Math.random()<.4?"choice":"pad";
+  out.push({parts:[a,op,b,"=",ans],u:4,answer:ans,mode,options:mode==="choice"?choices(ans,10):null});}return out;}
+function genS2(k){const out=[],seen=new Set();let g=0;while(out.length<k&&g++<5000){const f=R(0,3);let parts,u,ans;
+  if(f<2){const c=R(2,10),x=R(1,c-1),y=c-x;parts=[x,"+",y,"=",c];u=f===0?2:0;ans=f===0?y:x;}
+  else{const a=R(2,10),b=R(1,a),c=a-b;parts=[a,"−",b,"=",c];u=f===2?2:0;ans=f===2?b:a;}
+  const key=parts.join()+u;if(seen.has(key))continue;seen.add(key);const mode=Math.random()<.35?"choice":"pad";
+  out.push({parts,u,answer:ans,mode,options:mode==="choice"?choices(ans,10):null});}return out;}
+const dg=n=>[Math.floor(n/100)%10,Math.floor(n/10)%10,n%10];
+function hasCarry(a,b){const x=dg(a),y=dg(b);return x[2]+y[2]>9||x[1]+y[1]+(x[2]+y[2]>9?1:0)>9;}
+function hasBorrow(a,b){const x=dg(a),y=dg(b);return x[2]<y[2]||x[1]<y[1];}
+function genPair(kind){
+  const op=Math.random()<.5?"+":"−";
+  for(let g=0;g<2000;g++){let a,b;
+    if(kind==="round"){if(Math.random()<.5){a=R(1,8)*100;b=R(1,9)*100;}else{a=R(10,89)*10;b=R(1,40)*10;}}
+    else{a=R(100,899);b=R(Math.random()<.3?12:100,899);}
+    if(op==="−"&&b>a)[a,b]=[b,a];
+    if(a===b)continue;
+    if(op==="+"&&a+b>1000)continue;
+    if(kind==="no"){if(op==="+"&&(hasCarry(a,b)||a+b>999))continue;if(op==="−"&&hasBorrow(a,b))continue;}
+    if(kind==="carry"){if(op==="+"&&!hasCarry(a,b))continue;if(op==="−"&&!hasBorrow(a,b))continue;}
+    return {a,b,op,r:op==="+"?a+b:a-b};
+  }
+  return {a:300,b:200,op:"+",r:500};
+}
+const PATTERN=["carry","no","round","round","no","carry","round","no","carry","round"];
+const kindsN=k=>shuffle(Array.from({length:k},(_,i)=>PATTERN[i%10]));
+function genS3(n){return kindsN(n).map(k=>{const p=genPair(k);return{parts:[p.a,p.op,p.b,"=",p.r],u:4,answer:p.r,mode:"pad",vertical:true,borrow:p.op==="−"&&hasBorrow(p.a,p.b)};});}
+function genS4(n){return kindsN(n).map(k=>{const p=genPair(k);const first=Math.random()<.5;return{parts:[p.a,p.op,p.b,"=",p.r],u:first?0:2,answer:first?p.a:p.b,mode:"pad",vertical:true,borrow:p.op==="−"&&hasBorrow(p.a,p.b)};});}
+function genS5(k){return Array.from({length:k},(_,i)=>{const idx=(S.problemIdx+i)%PROBLEMS.length;const pr=PROBLEMS[idx];return{problem:true,idx,text:pr.t,answer:pr.a,unit:pr.u,hint:pr.h,mode:"pad"};});}
+const GEN={1:genS1,2:genS2,3:genS3,4:genS4,5:genS5};
+
+/* ---------- routing ---------- */
+const app=document.getElementById("app");
+let P=null, screen="home", draft=null;
+function route(){
+  stopTimer();
+  document.getElementById("coach").hidden=true;
+  if(!S.profile.created)screen="wardrobe";
+  ({wardrobe:renderWardrobe,home:renderHome,badges:renderBadges,parent:renderParent,guide:renderGuide}[screen]||renderHome)();
+  window.scrollTo(0,0);
+}
+function go(s){screen=s;P=null;draft=null;route();}
+
+/* ---------- home ---------- */
+function renderHome(){
+  const t=today(),rec=S.days[t]||{stages:{}},streak=liveStreak(),C=cfg(),req=n=>C[n].c>0;
+  let next=1;while(next<=5&&((rec.stages&&rec.stages[next])||!req(next)))next++;
+  const done=next>5, L=levelInfo(S.xp);
+  let week="";for(let i=6;i>=0;i--){const k=addDays(t,-i);const on=S.days[k]&&S.days[k].done;const [y,m,d]=k.split("-").map(Number);const w=new Date(y,m-1,d).getDay();
+    week+=`<div class="wd ${on?"on":""} ${i===0?"today":""}"><i></i><span>${i===0?"Azi":DOW[w]}</span></div>`;}
+  let rows="";for(let n=1;n<=5;n++){const r=rec.stages&&rec.stages[n];const skip=!r&&!req(n);const cls=(r?"done":skip?"skip":n===next?"next":"")+(n===1?" first":"");
+    const meta=skip?"Liber azi":`${n===5?(C[n].c===1?"1 problemă":C[n].c+" probleme"):C[n].c+" exerciții"} · ${fmt(C[n].m*60)}`;
+    const status=r?`${fmt(r.t)}<br>+${r.xp||0} XP`:n===next?"Urmează":skip?"":"Blocat";
+    rows+=`<button class="stg ${cls}" data-stage="${n}" ${(!r&&n!==next)?"disabled":""}><span class="num">${r?(r.medal?medalSVG(r.medal,28):"✓"):n}</span><span><div class="t">${STAGE[n].name}</div><div class="s">${meta}</div></span><span class="st">${status}</span></button>`;}
+  const shortDay=S.settings&&S.settings.today&&S.settings.today.date===t;
+  const recent=S.badges.slice(-5).map(id=>BADGES.find(b=>b.id===id)).filter(Boolean);
+  app.innerHTML=`<section class="screen">
+    <div class="panel player">
+      <div class="avframe">${avatarFull(S.profile)}</div>
+      <div>
+        <div class="eyebrow">Jucătoare</div>
+        <h1 style="font-size:28px;margin:4px 0 8px">${esc(S.profile.name)}</h1>
+        <div class="lvl"><span class="n">Nivel ${L.level}</span><span class="rank">${rankOf(L.level)}</span></div>
+        <div class="xpbar"><i style="width:${Math.round(L.into/L.need*100)}%"></i></div>
+        <div class="xptext">${L.into} / ${L.need} XP până la nivelul ${L.level+1}</div>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="panel">
+        <div class="streak">${streak>0?I.flame:I.flameOff}<div><div class="big">${streak}</div><div class="muted" style="font-weight:700;font-size:14px">${streak===1?"zi la rând":"zile la rând"}</div></div>
+          ${S.shields?`<span class="chip" style="margin-left:auto" title="Scuturi">${I.shield} ${S.shields}</span>`:""}</div>
+        <div class="week">${week}</div>
+        <p class="muted" style="margin:10px 0 0;font-size:14px;font-weight:600">${streakLine(streak,done)}</p>
+      </div>
+      <button class="panel badgeprev" id="toBadges" style="text-align:left">
+        <div class="eyebrow">Insigne</div>
+        <div style="font-size:30px;font-weight:900">${S.badges.length}<span class="muted" style="font-size:16px;font-weight:700"> / ${BADGES.length}</span></div>
+        <div class="icons">${recent.length?recent.map(b=>hexBadge(b.c,b.g)).join(""):`<span class="muted" style="font-size:14px;font-weight:600">Prima insignă te așteaptă.</span>`}</div>
+      </button>
+    </div>
+    <div class="panel mission">
+      <div class="row" style="margin-bottom:6px"><div class="grow"><div class="eyebrow">Misiunea de azi</div>${shortDay?`<div style="font-size:13px;font-weight:700;color:var(--gold);margin-top:4px">Azi antrenamentul e mai scurt</div>`:""}</div><span class="muted" style="font-weight:700;font-size:14px">${done?"Completă":`Etapa ${next} din 5`}</span></div>
+      ${rows}
+      <div style="margin-top:12px">${done?`<p style="margin:0;font-weight:700">Misiune completă pe azi. Revino mâine ca să crească seria.</p><p class="muted" style="margin:6px 0 0;font-size:14px">Poți rejuca orice etapă ca să-ți bați recordul.</p>`
+        :`<button class="btn big" id="startBtn">${Object.keys(rec.stages||{}).length===0?"Începe misiunea":"Continuă: etapa "+next}</button>`}</div>
+    </div>
+    <div class="nav">
+      <button class="btn ghost" id="toWard">${I.shirt}Vestiar</button>
+      <button class="btn ghost" id="toBadges2">${I.medal}Insigne</button>
+      <button class="btn ghost" id="toGuide">${I.book}Ghid</button>
+      <button class="btn ghost" id="toParent">${I.chart}Părinți</button>
+    </div>
+  </section>`;
+  const sb=document.getElementById("startBtn");if(sb)sb.onclick=()=>intro(next);
+  app.querySelectorAll(".stg").forEach(b=>b.onclick=()=>{const n=+b.dataset.stage;if((rec.stages&&rec.stages[n])||n===next)intro(n);});
+  document.getElementById("toWard").onclick=()=>go("wardrobe");
+  document.getElementById("toBadges").onclick=document.getElementById("toBadges2").onclick=()=>go("badges");
+  document.getElementById("toParent").onclick=parentGate;
+  document.getElementById("toGuide").onclick=()=>go("guide");
+  if(!S.seenTour&&!document.querySelector(".overlay"))setTimeout(()=>showTour(0),300);
+}
+function streakLine(s,done){
+  if(s===0)return "Termină misiunea de azi ca să pornești seria.";
+  if(!done&&S.streak.lastDay!==today())return "Termină misiunea de azi ca să nu pierzi seria.";
+  const left=7-(s%7);return left===7?"Săptămână completă! Ai primit un scut.":`Încă ${left} ${left===1?"zi":"zile"} până la scutul săptămânii.`;
+}
+
+/* ---------- wardrobe ---------- */
+function renderWardrobe(){
+  if(!draft)draft=JSON.parse(JSON.stringify(S.profile));
+  const c=draft, first=!S.profile.created, L=levelInfo(S.xp).level;
+  const optBtns=(list,key)=>list.map(i=>{const locked=L<i.lvl;return `<button class="opt ${c[key]===i.id?"sel":""} ${locked?"locked":""}" data-k="${key}" data-v="${i.id}" ${locked?"disabled":""}>${locked?I.lock+" "+i.name+" · nivel "+i.lvl:i.name}</button>`;}).join("");
+  const pairBtns=(list,key)=>list.map(([v,l])=>`<button class="opt ${c[key]===v?"sel":""}" data-k="${key}" data-v="${v}">${l}</button>`).join("");
+  const swatches=(list,key,label)=>list.map((x,i)=>`<button class="sw ${c[key]===i?"sel":""}" data-k="${key}" data-v="${i}" style="background:${x}" aria-label="${label} ${i+1}"></button>`).join("");
+  app.innerHTML=`<section class="screen">
+    <div class="row"><div class="grow"><div class="eyebrow">${first?"Bun venit":"Vestiar"}</div><h1 style="font-size:28px;margin-top:4px">${first?"Creează-ți personajul":"Personajul tău"}</h1></div>${first?"":`<button class="btn ghost small" id="back">Înapoi</button>`}</div>
+    ${first?`<p style="margin:0;font-weight:500" class="muted">Câștigi XP la fiecare antrenament. Pe măsură ce crești în nivel, deblochezi haine, accesorii și fundaluri noi.</p>`:""}
+    <div class="wardrobe">
+      <div class="avframe sticky" id="pv">${avatarFull(c)}</div>
+      <div class="panel screen" style="gap:16px">
+        <div><label class="f" for="nm">NUME</label><input class="txt" id="nm" maxlength="14" value="${esc(c.name)}"></div>
+        <div><label class="f">PIELE</label><div class="opts">${SKINS.map((x,i)=>`<button class="sw ${c.skin===i?"sel":""}" data-k="skin" data-v="${i}" style="background:${x}" aria-label="${SKIN_NAMES[i]}"></button>`).join("")}</div></div>
+        <div><label class="f">OCHI</label><div class="opts">${pairBtns(EYES,"eyes")}</div></div>
+        <div><label class="f">CULOAREA OCHILOR</label><div class="opts">${swatches(EYEC,"eyeColor","Ochi")}</div></div>
+        <div><label class="f">GURA</label><div class="opts">${pairBtns(MOUTHS,"mouth")}</div></div>
+        <div><label class="f">COAFURĂ</label><div class="opts">${pairBtns(HAIRS,"hair")}</div></div>
+        <div><label class="f">CULOAREA PĂRULUI</label><div class="opts">${swatches(HAIRC,"hairColor","Păr")}</div></div>
+        <div><label class="f">VÂRFURI COLORATE</label><div class="opts"><button class="opt ${c.hairTip===-1?"sel":""}" data-k="hairTip" data-v="-1">Fără</button>${swatches(HAIRC,"hairTip","Vârfuri")}</div></div>
+        <div><label class="f">ȚINUTĂ</label><div class="opts">${optBtns(OUTFITS,"outfit")}</div></div>
+        <div><label class="f">CULOAREA ȚINUTEI</label><div class="opts">${swatches(OUTC,"outfitColor","Culoare")}</div></div>
+        <div><label class="f">ACCESORIU</label><div class="opts">${optBtns(ACCS,"acc")}</div></div>
+        <div><label class="f">FUNDAL</label><div class="opts">${BGS.map(b=>{const locked=L<b.lvl;return `<button class="opt ${c.bg===b.id?"sel":""} ${locked?"locked":""}" data-k="bg" data-v="${b.id}" ${locked?"disabled":""}>${locked?I.lock:`<span style="width:14px;height:14px;border-radius:4px;background:linear-gradient(${b.a},${b.b});display:inline-block"></span>`}${b.name}${locked?" · nivel "+b.lvl:""}</button>`;}).join("")}</div></div>
+        <button class="btn big teal" id="saveC">${first?"Începe":"Salvează"}</button>
+      </div>
+    </div></section>`;
+  app.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>{const k=b.dataset.k;let v=b.dataset.v;if(["skin","hairColor","outfitColor","eyeColor","hairTip"].includes(k))v=+v;c[k]=v;
+    app.querySelectorAll(`[data-k="${k}"]`).forEach(x=>x.classList.toggle("sel",x===b));document.getElementById("pv").innerHTML=avatarFull(c);});
+  document.getElementById("nm").oninput=e=>c.name=e.target.value.trim()||"Sofia";
+  const bk=document.getElementById("back");if(bk)bk.onclick=()=>go("home");
+  document.getElementById("saveC").onclick=()=>{c.created=true;S.profile=Object.assign(S.profile,c);save();go("home");};
+}
+
+/* ---------- guide ---------- */
+function demoTrack(){return `<div class="track" style="pointer-events:none"><div class="line"></div><div class="mk ghost" style="left:42%">${I.ghost}</div><div class="mk me" style="left:62%">${avatarHead(S.profile)}</div><div class="flag">${I.flag}</div></div>`;}
+function demoVert(){
+  const cell=(t,cls)=>`<span class="cell ${cls||""}">${t}</span>`;
+  return `<div class="vert demo" style="grid-template-columns:auto repeat(3,auto)">
+    <span class="op"></span><span class="mark on"><span>•</span></span><span class="mark on"><span>•</span></span><span class="mark"><span></span></span>
+    <span class="op"></span>${cell(7)}${cell(2)}${cell(3)}
+    <span class="op">−</span>${cell(6)}${cell(5)}${cell(6)}
+    <div class="bar"></div>
+    <span class="op"></span><span class="urow">${cell("","u next")}${cell(6,"u gstep g2")}${cell(7,"u gstep g1")}</span>
+  </div>`;
+}
+function demoXp(){const L=levelInfo(S.xp);return `<div class="row" style="justify-content:space-between;font-weight:700;font-size:14px"><span>Nivel ${L.level} · ${rankOf(L.level)}</span><span class="muted">${L.into} / ${L.need} XP</span></div><div class="xpbar"><i style="width:${Math.max(8,Math.round(L.into/L.need*100))}%"></i></div>`;}
+const TOUR=[
+  {t:"Misiunea de azi",b:"În fiecare zi ai 5 etape, pe rând. Când le termini pe toate, se aprinde flacăra și crește seria de zile.",v:()=>`<div class="demo-steps">${[1,2,3,4,5].map(n=>`<span class="num ${n<3?"d":n===3?"n":""}">${n<3?"✓":n}</span>`).join("")}</div>`},
+  {t:"Luptă pentru aur",b:"Tu ești cercul cu fața ta. Ceasul auriu merge în ritm de aur. La fiecare etapă primești o medalie: aur dacă ești rapidă și corectă, argint sau bronz dacă mai ai de lucrat. Aurul aduce cele mai multe XP.",v:()=>demoTrack()+`<div class="row" style="justify-content:center;margin-top:10px">${medalSVG(3,40)}${medalSVG(2,40)}${medalSVG(1,40)}</div>`},
+  {t:"Scrie de la dreapta",b:"La numerele mari scrii ca în caiet: întâi unitățile, apoi zecile, apoi sutele. Căsuțele de sus sunt ciorna ta: atinge-le ca să marchezi împrumutul sau „1 în minte”.",v:demoVert},
+  {t:"Crești în nivel",b:"Fiecare răspuns corect aduce XP. Cu fiecare nivel nou deblochezi haine, accesorii și fundaluri în Vestiar. Colecționează și insignele!",v:demoXp}
+];
+function showTour(i){
+  i=i||0;const s=TOUR[i],last=i===TOUR.length-1;
+  modal(`<div class="eyebrow">Cum joci · ${i+1} din ${TOUR.length}</div><h2 style="font-size:26px">${s.t}</h2><div class="tourvis">${s.v()}</div><p style="margin:0;font-weight:500;line-height:1.5">${s.b}</p>
+    <div class="dots">${TOUR.map((_,k)=>`<i class="${k===i?"on":""}"></i>`).join("")}</div>
+    <div class="row" style="justify-content:center">${i>0?`<button class="btn ghost" id="tPrev">Înapoi</button>`:`<button class="btn ghost" id="tSkip">Sari peste</button>`}<button class="btn teal" id="tNext">${last?"Am înțeles!":"Mai departe"}</button></div>`,true);
+  const done=()=>{closeModal();if(!S.seenTour){S.seenTour=true;save();}};
+  document.getElementById("tNext").onclick=()=>last?done():showTour(i+1);
+  const pv=document.getElementById("tPrev");if(pv)pv.onclick=()=>showTour(i-1);
+  const sk=document.getElementById("tSkip");if(sk)sk.onclick=done;
+}
+function renderGuide(){
+  const sec=(title,body,vis)=>`<div class="panel gsec"><h3>${title}</h3>${vis?`<div class="gvis">${vis}</div>`:""}<div class="gbody">${body}</div></div>`;
+  app.innerHTML=`<section class="screen">
+    <div class="row"><div class="grow"><div class="eyebrow">Ghid</div><h1 style="font-size:28px;margin-top:4px">Cum funcționează</h1></div><button class="btn ghost small" id="back">Înapoi</button></div>
+    <button class="btn gold" id="tour">Vezi turul rapid</button>
+    ${sec("Misiunea de azi",`<p>În fiecare zi ai de făcut 5 etape, în ordine:</p>
+      <ol><li><b>Calcul rapid</b>: adunări și scăderi până la 10.</li><li><b>Numărul ascuns</b>: găsești numărul care lipsește, de exemplu 2 + ? = 8.</li><li><b>Numere mari</b>: adunări și scăderi până la 1000, în coloană.</li><li><b>Detectivul numerelor</b>: numărul care lipsește, până la 1000.</li><li><b>Problema zilei</b>: o problemă de gândit.</li></ol>
+      <p>Uneori mama face misiunea mai scurtă, dacă ai multe teme. Atunci unele etape apar „Liber azi”.</p>`)}
+    ${sec("Seria de zile",`<p>Când termini toată misiunea, se aprinde flacăra zilei. Zilele la rând fac o <b>serie</b>. Dacă sari o zi, seria pornește de la 1.</p>
+      <p>După fiecare 7 zile la rând primești un <b>scut</b>. Scutul îți salvează seria dacă ratezi o singură zi.</p>`,`<div class="streak" style="justify-content:center">${I.flame}<div class="big">${liveStreak()}</div></div>`)}
+    ${sec("Cronometrul",`<p>Bara de sus arată cât timp mai ai. Pe pistă, cercul cu fața ta avansează cu fiecare exercițiu, iar ceasul avansează cu timpul.</p>
+      <ul><li>Ceasul auriu merge în <b>ritm de aur</b>. Dacă ajungi la steag înaintea lui, ești pe drumul spre aur.</li><li>Timpul nu se termină niciodată. Dacă treci de el, bara devine mov și poți termina liniștită.</li><li>Ai nevoie de o pauză? Apasă butonul de pauză și ceasul se oprește.</li></ul>`,demoTrack())}
+    ${sec("Cum scrii răspunsul",`<p>Scrii cifrele cu tastatura de pe ecran și apeși <b>OK</b>. La unele exerciții alegi răspunsul dintre 3 butoane.</p>
+      <p><b>La numerele mari scrii de la dreapta la stânga</b>, ca în caiet. Exemplu: 723 − 656. Scrii întâi <b>7</b> (unitățile), apoi <b>6</b> (zecile). Căsuța roz arată unde urmează să scrii.</p>
+      <p><b>Căsuțele de sus</b> sunt ciorna ta. La scădere, atinge căsuța de deasupra cifrei de la care te împrumuți: apare un punct. La adunare apare „1”, când ai 1 în minte. Nu contează la punctaj, sunt doar ca să te ajute.</p>`,demoVert())}
+    ${sec("Când greșești",`<ul><li>La exerciții ai <b>2 încercări</b>. Dacă și a doua e greșită, vezi răspunsul corect și treci mai departe.</li><li>La problema zilei ai <b>3 încercări</b>. După un minut poți cere un <b>indiciu</b> cu primul pas.</li><li>Folosește o foaie și un creion pentru calcule, e voie!</li></ul>`)}
+    ${sec("Medalii",`<p>La finalul fiecărei etape primești o medalie:</p><table><tbody>
+      <tr><td><span class="price">${medalSVG(3,22)} <b>Aur</b></span><br><span class="muted">minimum 90% corecte din prima și cel mult 70% din timp</span></td><td><b>+15 XP</b></td></tr>
+      <tr><td><span class="price">${medalSVG(2,22)} <b>Argint</b></span><br><span class="muted">minimum 80% corecte din prima și cel mult 90% din timp</span></td><td><b>+8 XP</b></td></tr>
+      <tr><td><span class="price">${medalSVG(1,22)} <b>Bronz</b></span><br><span class="muted">etapa terminată</span></td><td><b>+3 XP</b></td></tr>
+    </tbody></table><p>La problema zilei, aurul înseamnă: rezolvată din prima, fără indiciu, în cel mult 3 minute. Înainte de fiecare etapă vezi exact ce îți trebuie pentru aur.</p>`)}
+    ${sec("XP și niveluri",`<table><tbody>
+      <tr><td>Răspuns corect din prima, etapele 1–2</td><td><b>+1 XP</b></td></tr>
+      <tr><td>Răspuns corect din prima, etapele 3–4</td><td><b>+2 XP</b></td></tr>
+      <tr><td>Problema zilei rezolvată din prima</td><td><b>+15 XP</b></td></tr>
+      <tr><td>Medalie (aur / argint / bronz)</td><td><b>+15 / 8 / 3</b></td></tr>
+      <tr><td>Record nou</td><td><b>+10 XP</b></td></tr>
+      <tr><td>10 răspunsuri corecte la rând</td><td><b>+3 XP</b></td></tr>
+      <tr><td>Misiunea zilei completă</td><td><b>+15 XP</b></td></tr>
+      <tr><td>7 zile la rând</td><td><b>+40 XP</b> și un scut</td></tr>
+    </tbody></table>
+    <p>Fiecare nivel cere mai mult XP decât cel dinainte. Cu aur la toate etapele urci mult mai repede.</p>
+    <p>Titlurile tale: Recrută, Exploratoare (nivel 3), Strategă (5), Expertă (8), Maestră (11), Legendă (15).</p>`,demoXp())}
+    ${sec("Vestiarul",`<p>Aici îți schimbi personajul oricând: piele, ochi, gură, coafură, culori, haine, accesorii și fundal. Obiectele cu lacăt se deblochează când ajungi la nivelul scris pe ele.</p>`)}
+    ${sec("Insignele",`<p>Insignele se câștigă pentru lucruri speciale: serii lungi de zile, medalii de aur, o zi întreagă fără greșeală, viteză, recorduri, 100 de scăderi cu împrumut și probleme rezolvate din prima. Unele se câștigă greu, după săptămâni de antrenament. Le vezi pe toate la <b>Insigne</b>, chiar și pe cele pe care încă nu le ai.</p>`)}
+    ${sec("Rejucare",`<p>O etapă terminată azi poate fi rejucată ca să-ți bați recordul. Primești jumătate din XP.</p>`)}
+  </section>`;
+  document.getElementById("back").onclick=()=>go("home");
+  document.getElementById("tour").onclick=()=>showTour(0);
+}
+
+/* ---------- badges ---------- */
+function renderBadges(){
+  app.innerHTML=`<section class="screen">
+    <div class="row"><div class="grow"><div class="eyebrow">Colecție</div><h1 style="font-size:28px;margin-top:4px">Insigne ${S.badges.length} / ${BADGES.length}</h1></div><button class="btn ghost small" id="back">Înapoi</button></div>
+    <div class="bgrid">${BADGES.map(b=>{const on=S.badges.includes(b.id);return `<div class="panel badge ${on?"":"off"}">${hexBadge(b.c,b.g)}<b>${b.name}</b><span>${b.desc}</span></div>`;}).join("")}</div>
+  </section>`;
+  document.getElementById("back").onclick=()=>go("home");
+}
+
+/* ---------- practice ---------- */
+function intro(n){
+  const rec=todayRec().stages[n],best=S.best[n],C=cfg()[n],cnt=C.c,lim=Math.round(C.m*60);
+  modal(`<div class="eyebrow">Etapa ${n} din 5</div>
+    <h2 style="font-size:30px">${STAGE[n].name}</h2>
+    <p style="margin:0;font-weight:500" class="muted">${STAGE[n].desc}</p>
+    <div class="row" style="justify-content:center;gap:8px">
+      <span class="chip">${n===5?(cnt===1?"1 problemă":cnt+" probleme"):cnt+" exerciții"}</span><span class="chip">${fmt(lim)} min</span>${best&&isDefault(n,C)?`<span class="chip">Record ${fmt(best)}</span>`:""}
+    </div>
+    <div class="stat" style="max-width:320px;margin:0 auto;width:100%;font-size:15px">
+      ${n===5?`<span class="price">${medalSVG(3,20)} Aur</span><b>din prima, fără indiciu, ≤ ${fmt(lim*.6)}</b><span class="price">${medalSVG(2,20)} Argint</span><b>corect, ≤ ${fmt(lim)}</b>`
+      :`<span class="price">${medalSVG(3,20)} Aur</span><b>≥ ${Math.ceil(cnt*.9)} din prima, ≤ ${fmt(lim*GOLD_T)}</b><span class="price">${medalSVG(2,20)} Argint</span><b>≥ ${Math.ceil(cnt*.8)} din prima, ≤ ${fmt(lim*SILVER_T)}</b>`}
+    </div>
+    <p style="margin:0;font-size:15px;font-weight:500;line-height:1.5">${n===5?"Citește de două ori. Folosește o foaie pentru calcule. După un minut poți cere un indiciu.":n>=3?"Scrie rezultatul de la dreapta la stânga: unități, zeci, sute. Căsuțele de sus te ajută să marchezi împrumutul sau „1 în minte”.":"Întrece ceasul auriu până la steag ca să câștigi aur."}</p>
+    ${rec?`<p style="margin:0;font-weight:700;color:var(--gold);font-size:14px">Ai terminat deja etapa azi. Rejucând primești jumătate din XP, dar îți poți bate recordul.</p>`:""}
+    <div class="row" style="justify-content:center"><button class="btn ghost" data-close>Nu acum</button><button class="btn teal" id="go">Start</button></div>`);
+  document.getElementById("go").onclick=()=>{closeModal();startStage(n,!!rec);};
+}
+function startStage(n,replay){
+  const C=cfg()[n];
+  P={stage:n,replay,limit:Math.round(C.m*60),isDef:isDefault(n,C),items:GEN[n](C.c),idx:0,firstTry:0,correct:0,tries:0,combo:0,maxCombo:0,elapsed:0,paused:false,last:performance.now(),lastAct:performance.now(),input:"",locked:false,missed:[],hintShown:false,borrowOk:0,xp:0,done:false};
+  screen="practice";
+  renderPractice();
+  document.getElementById("coach").hidden=false;document.getElementById("coachFace").innerHTML=avatarHead(S.profile);
+  say(n===5?"Citește cu atenție.":"Start! Hai, "+S.profile.name+"!",2000);
+  startTimer();
+}
+function renderPractice(){
+  const n=P.stage;
+  app.innerHTML=`<section class="screen" style="padding-bottom:70px">
+    <div class="ptop">
+      <button class="btn ghost small" id="quit" aria-label="Ieși">✕</button>
+      <div class="timer" id="timer"><div class="fill" id="tfill" style="width:100%"></div><div class="lbl" id="tlbl">${fmt(P.limit)}</div></div>
+      <button class="btn ghost small" id="pause" aria-label="Pauză">${I.pause}</button>
+      <button class="btn ghost small" id="snd" aria-label="Sunet">${S.sound?I.sound:I.mute}</button>
+    </div>
+    ${n<5?`<div class="track" aria-hidden="true"><div class="line"></div><div class="mk ghost" id="mkGhost">${I.ghost}</div><div class="mk me" id="mkMe">${avatarHead(S.profile)}</div><div class="flag">${I.flag}</div></div>
+    <div class="pace" id="pace"></div>`:""}
+    <div class="qcard" id="qcard"></div>
+    <div class="msg center" id="msg"></div>
+    <div id="inputArea"></div>
+  </section>`;
+  document.getElementById("quit").onclick=()=>{P.paused=true;modal(`<h2>Ieși din etapă?</h2><p style="margin:0" class="muted">Etapa va începe de la capăt data viitoare.</p><div class="row" style="justify-content:center"><button class="btn teal" id="stay">Continui</button><button class="btn ghost" id="leave">Ies</button></div>`,true);
+    document.getElementById("stay").onclick=()=>{closeModal();resume();};document.getElementById("leave").onclick=()=>{closeModal();go("home");};};
+  document.getElementById("pause").onclick=()=>{P.paused=true;modal(`<h2>Pauză</h2><p style="margin:0" class="muted">Cronometrul s-a oprit.</p><button class="btn big teal" id="res">Continui</button>`,true);document.getElementById("res").onclick=()=>{closeModal();resume();};};
+  document.getElementById("snd").onclick=e=>{S.sound=!S.sound;save();e.currentTarget.innerHTML=S.sound?I.sound:I.mute;};
+  showQuestion();
+}
+function resume(){P.paused=false;P.last=performance.now();P.lastAct=performance.now();}
+const vW=it=>Math.max(...[0,2,4].map(i=>String(it.parts[i]).length));
+function vertHTML(it){
+  const W=vW(it);
+  const row=(sign,val,isU)=>{let c=`<span class="op">${sign}</span>`;
+    if(isU){let cells="";for(let i=0;i<W;i++)cells+=`<span class="cell u"></span>`;return c+`<span class="urow" id="slot">${cells}</span>`;}
+    const str=String(val).padStart(W," ");for(let i=0;i<W;i++)c+=`<span class="cell">${str[i]===" "?"":str[i]}</span>`;return c;};
+  let marks=`<span class="op"></span>`;for(let i=0;i<W;i++)marks+=`<button class="mark" data-m="${i}" aria-label="Marchează coloana ${i+1}"><span></span></button>`;
+  return `<div class="vert" style="grid-template-columns:auto repeat(${W},auto)">${marks}${row("",it.parts[0],it.u===0)}${row(it.parts[1],it.parts[2],it.u===2)}<div class="bar"></div>${row("",it.parts[4],it.u===4)}</div>`;
+}
+function showQuestion(){
+  const it=P.items[P.idx];P.input="";P.tries=0;P.locked=false;
+  const q=document.getElementById("qcard");
+  if(it.problem){
+    q.innerHTML=`<div class="qnum">${P.items.length>1?`Problema ${P.idx+1} din ${P.items.length}`:"Problema zilei"}</div><p class="problem">${it.text}</p><div id="hintBox"></div>
+      <div style="font-weight:700">Răspuns: <span class="answerbox slot" id="slot">&nbsp;</span> ${it.unit?`<span>${it.unit}</span>`:""}</div>
+      <div><button class="btn gold small" id="hintBtn" disabled>Indiciu disponibil după 1 minut</button></div>`;
+    document.getElementById("hintBtn").onclick=()=>{P.hintShown=true;document.getElementById("hintBox").innerHTML=`<div class="hint">${it.hint}</div>`;document.getElementById("hintBtn").hidden=true;act();};
+  } else if(it.vertical){
+    q.innerHTML=`<div class="qnum">Exercițiul ${P.idx+1} din ${P.items.length}</div>${vertHTML(it)}<div class="note">Scrie de la dreapta: întâi unitățile.<br>${it.parts[1]==="−"?"Atinge căsuța de sus când te împrumuți.":"Atinge căsuța de sus când ai 1 în minte."}</div>`;
+    q.querySelectorAll(".mark").forEach(m=>m.onclick=()=>{const on=m.classList.toggle("on");m.firstChild.textContent=on?(it.parts[1]==="−"?"•":"1"):"";m.setAttribute("aria-pressed",on);act();});
+  } else {
+    q.innerHTML=`<div class="qnum">Exercițiul ${P.idx+1} din ${P.items.length}</div><div class="eq">${it.parts.map((x,i)=>i===it.u?`<span class="slot" id="slot">?</span>`:`<span>${x}</span>`).join("")}</div>`;
+  }
+  if(it.vertical)setSlot("");
+  const ia=document.getElementById("inputArea");
+  if(it.mode==="choice"){
+    ia.innerHTML=`<div class="choices">${it.options.map(v=>`<button data-c="${v}">${v}</button>`).join("")}</div>`;
+    ia.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>{if(P.locked)return;setSlot(b.dataset.c);submit(b.dataset.c,b);});
+  } else {
+    ia.innerHTML=`<div class="pad">${[1,2,3,4,5,6,7,8,9].map(d=>`<button data-d="${d}">${d}</button>`).join("")}<button class="del" data-del aria-label="Șterge">⌫</button><button data-d="0">0</button><button class="ok" data-ok>OK</button></div>`;
+    ia.querySelectorAll("[data-d]").forEach(b=>b.onclick=()=>typeD(b.dataset.d));
+    ia.querySelector("[data-del]").onclick=delD;
+    ia.querySelector("[data-ok]").onclick=()=>{if(P.locked||!P.input)return;submit(P.input);};
+  }
+  const m=document.getElementById("msg");m.textContent="";m.className="msg center";
+  updateTrack();
+}
+function typeD(d){if(P.locked)return;const it=P.items[P.idx];
+  if(it.vertical){if(P.input.length>=vW(it))return;P.input=d+P.input;}
+  else{if(P.input.length>=4)return;if(P.input==="0")P.input="";P.input+=d;}
+  setSlot(P.input);act();}
+function delD(){if(P.locked)return;const it=P.items[P.idx];P.input=it.vertical?P.input.slice(1):P.input.slice(0,-1);setSlot(P.input);act();}
+function act(){P.lastAct=performance.now();hideSay();}
+function setSlot(v){const s=document.getElementById("slot");if(!s)return;
+  if(P.items[P.idx].vertical){const cells=[...s.querySelectorAll(".cell")],W=cells.length;cells.forEach((c,i)=>{const j=W-1-i;c.textContent=j<v.length?v[v.length-1-j]:"";c.classList.toggle("next",v.length<W&&i===W-1-v.length);});s.classList.remove("good","bad");return;}
+  s.textContent=v===""?(P.items[P.idx].problem?" ":"?"):v;s.classList.toggle("filled",v!=="");s.classList.remove("good","bad");}
+document.addEventListener("keydown",e=>{
+  if(screen!=="practice"||!P||P.paused||P.done||document.querySelector(".overlay"))return;
+  const it=P.items[P.idx];if(!it)return;
+  if(/^[0-9]$/.test(e.key)){if(it.mode==="choice"){const b=[...document.querySelectorAll("[data-c]")].find(x=>x.dataset.c===e.key);if(b)b.click();}else typeD(e.key);e.preventDefault();}
+  else if(e.key==="Backspace"&&it.mode!=="choice"){delD();e.preventDefault();}
+  else if(e.key==="Enter"&&it.mode!=="choice"&&P.input&&!P.locked){submit(P.input);e.preventDefault();}
+});
+function submit(val,btn){
+  const it=P.items[P.idx];act();P.locked=true;
+  const s=document.getElementById("slot"),m=document.getElementById("msg");
+  const maxTries=it.problem?3:2;
+  if(Number(val)===it.answer){
+    P.correct++;
+    if(P.tries===0){P.firstTry++;P.combo++;P.maxCombo=Math.max(P.maxCombo,P.combo);}
+    if(it.borrow)P.borrowOk++;
+    const st=P.stage;P.xp+=st<=2?(P.tries===0?1:0):st<=4?(P.tries===0?2:0):([15,6,2][P.tries]||0);
+    s.classList.add("good");m.className="msg center good";
+    m.textContent=P.combo>0&&P.combo%5===0?`${P.combo} la rând!`:GOOD[R(0,GOOD.length-1)];
+    beep("good");if(P.combo>0&&P.combo%10===0)say(P.combo+" la rând! +3 XP",1500);
+    setTimeout(nextQ,it.problem?900:420);
+  } else {
+    P.tries++;P.combo=0;beep("bad");s.classList.add("bad");
+    const target=btn||(it.vertical?document.querySelector(".vert"):s);target.classList.remove("shake");void target.offsetWidth;target.classList.add("shake");
+    if(P.tries>=maxTries){
+      m.className="msg center bad";m.textContent=`Răspunsul corect: ${it.answer}`;
+      setSlot(String(it.answer));s.classList.remove("bad");s.classList.add("good");
+      P.missed.push(it.problem?"Problema "+(it.idx+1)+": ["+it.answer+"]":eqText(it));
+      setTimeout(nextQ,1900);
+    } else {
+      m.className="msg center bad";m.textContent=it.problem?(P.tries===1?"Nu încă. Verifică fiecare pas.":"Mai ai o încercare. Citește din nou întrebarea."):"Mai încearcă o dată.";
+      setTimeout(()=>{P.input="";setSlot("");target.classList.remove("shake");P.locked=false;},600);
+    }
+  }
+}
+function eqText(it){return it.parts.map((x,i)=>i===it.u?`[${x}]`:x).join(" ");}
+function nextQ(){P.idx++;if(P.idx>=P.items.length){finishStage();return;}showQuestion();}
+
+/* timer */
+let TI=null;
+function startTimer(){stopTimer();P.last=performance.now();TI=setInterval(tick,200);tick();}
+function stopTimer(){if(TI){clearInterval(TI);TI=null;}}
+function tick(){
+  if(!P||P.done)return;const now=performance.now();
+  if(!P.paused)P.elapsed+=(now-P.last)/1000;
+  P.last=now;
+  const lim=P.limit,left=lim-P.elapsed,tm=document.getElementById("timer");if(!tm)return;
+  const f=document.getElementById("tfill"),l=document.getElementById("tlbl");
+  if(left>=0){f.style.width=(left/lim*100)+"%";l.textContent=fmt(left);tm.classList.toggle("warn",left<lim*.25);tm.classList.remove("over");}
+  else{tm.classList.add("over");l.textContent="Timp în plus +"+fmt(-left);}
+  if(!P.paused&&now-P.lastAct>15000){P.lastAct=now;say(CHEERS[R(0,CHEERS.length-1)].replace("Sofia",S.profile.name),3000);beep("nudge");}
+  const it=P.items[P.idx];if(it&&it.problem&&P.elapsed>60){const hb=document.getElementById("hintBtn");if(hb&&hb.disabled){hb.disabled=false;hb.textContent="Arată un indiciu";}}
+  updateTrack();
+}
+function updateTrack(){
+  const me=document.getElementById("mkMe"),gh=document.getElementById("mkGhost"),pc=document.getElementById("pace");if(!me)return;
+  const tr=me.parentElement.clientWidth-44,my=P.idx/P.items.length,gold=Math.min(1,P.elapsed/(P.limit*GOLD_T)),silver=P.elapsed/(P.limit*SILVER_T);
+  me.style.left=(22+my*tr)+"px";gh.style.left=(22+gold*tr)+"px";
+  if(P.elapsed<3){pc.className="pace";pc.textContent="Ceasul auriu merge în ritm de aur. Îl întreci?";}
+  else if(P.elapsed>P.limit){pc.className="pace behind";pc.textContent="Timpul a trecut. Termină calm, fiecare răspuns contează.";}
+  else if(my>=gold){pc.className="pace ahead";pc.textContent="Ritm de aur! Ține-o tot așa!";}
+  else if(my>=silver){pc.className="pace mid";pc.textContent="Ritm de argint. Mai repede pentru aur!";}
+  else{pc.className="pace behind";pc.textContent="Accelerează ca să prinzi o medalie mai bună!";}
+}
+let sayT=null;
+function say(t,ms){const b=document.getElementById("bubble");b.textContent=t;b.classList.remove("hide");clearTimeout(sayT);sayT=setTimeout(hideSay,ms||2500);}
+function hideSay(){document.getElementById("bubble").classList.add("hide");}
+
+/* finish */
+function finishStage(){
+  stopTimer();P.done=true;
+  const n=P.stage,tot=P.items.length,lim=P.limit,t=Math.round(P.elapsed),inTime=t<=lim;
+  const prevBest=S.best[n],L0=levelInfo(S.xp).level;
+  const record=n<5&&P.isDef&&P.correct===tot&&P.firstTry>=tot*.7&&(prevBest==null||t<prevBest);
+  const combos=Math.floor(P.maxCombo/10);
+  const medal=medalOf(n,P.firstTry,P.correct,tot,t,lim,P.hintShown);
+  const lines=[];let xp;
+  if(P.replay){xp=Math.round(P.xp/2);lines.push(["Etapă rejucată (½ XP)",xp]);}
+  else{
+    xp=P.xp;lines.push([n===5?"Probleme rezolvate":"Răspunsuri corecte din prima",P.xp]);
+    xp+=MEDALS[medal].xp;lines.push(["Medalie de "+MEDALS[medal].name.toLowerCase(),MEDALS[medal].xp]);
+    if(record&&prevBest!=null){xp+=10;lines.push(["Record nou",10]);}
+    if(combos){xp+=3*combos;lines.push(["Serii de 10 la rând",3*combos]);}
+  }
+  if(record){S.best[n]=t;if(prevBest!=null)S.stats.records++;}
+  if(!P.replay&&medal===3)S.stats.gold++;
+  if(n===1&&P.isDef&&t<=75&&P.firstTry>=23)S.stats.fast++;
+  S.stats.borrow+=P.borrowOk;if(n===5){S.stats.problems+=P.correct;S.stats.problemsFirst+=P.firstTry;}
+  const rec=todayRec();
+  if(!P.replay||!rec.stages[n])rec.stages[n]={c:P.firstTry,ok:P.correct,n:tot,t,lim,xp,medal,missed:P.missed.slice(0,12),hint:n===5?P.hintShown:undefined};
+  if(n===5&&!P.replay)S.problemIdx+=tot;
+  const C=cfg();
+  let dayReward=null;
+  if([1,2,3,4,5].every(k=>rec.stages[k]||C[k].c===0)&&!rec.done){rec.done=true;dayReward=completeDay(rec);xp+=dayReward.xp;lines.push(["Misiunea zilei completă",dayReward.xp]);}
+  S.xp+=xp;
+  const badges=newBadges();
+  const L1=levelInfo(S.xp);
+  save();
+  document.getElementById("coach").hidden=true;
+  let next=n+1;while(next<=5&&(rec.stages[next]||C[next].c===0))next++;if(next>5)next=null;
+  beep("win");
+  app.innerHTML=`<section class="screen"><div class="panel screen center" style="gap:14px;padding:24px 18px">
+    <div class="eyebrow">Etapa ${n} · ${STAGE[n].name}</div>
+    <div class="medalbig">${medalSVG(medal,76)}<div><div class="eyebrow">Medalie</div><div style="font-size:26px;font-weight:900;color:${MEDALS[medal].c}">${MEDALS[medal].name}</div></div></div>
+    <div class="xpbig">+${xp} XP</div>
+    <div class="stat" style="max-width:380px;margin:0 auto;width:100%">
+      <span>${n===5?"Rezolvate":"Corecte din prima"}</span><b>${n===5?P.correct+" / "+tot:P.firstTry+" / "+tot}</b>
+      <span>Timp</span><b>${fmt(t)} <span class="muted" style="font-weight:600">/ ${fmt(lim)}</span></b>
+      ${n<5?`<span>Record</span><b>${S.best[n]!=null?fmt(S.best[n]):"–"}</b>`:""}
+      ${lines.map(([l,v])=>`<span class="muted">${l}</span><b class="xp">+${v}</b>`).join("")}
+    </div>
+    <div style="max-width:380px;margin:0 auto;width:100%;text-align:left">
+      <div class="row" style="justify-content:space-between;font-weight:700;font-size:14px"><span>Nivel ${L1.level} · ${rankOf(L1.level)}</span><span class="muted">${L1.into} / ${L1.need} XP</span></div>
+      <div class="xpbar"><i style="width:${Math.round(L1.into/L1.need*100)}%"></i></div>
+    </div>
+    ${record?`<p style="margin:0;font-weight:800;color:var(--teal)">${prevBest==null?"Primul tău record la această etapă!":"Record nou! Mai rapidă ca data trecută."}</p>`:""}
+    ${medal<3?`<p class="muted" style="margin:0;font-weight:600;font-size:15px">${nextMedalTip(n,medal,tot,lim)}</p>`:`<p style="margin:0;font-weight:700;color:var(--gold)">Aur! Ai lucrat rapid și corect.</p>`}
+    <div class="row" style="justify-content:center">
+      ${next&&!P.replay&&!dayReward?`<button class="btn big teal" id="nextSt">Etapa ${next}</button>`:""}
+      <button class="btn ghost" id="home">Acasă</button>
+    </div></div></section>`;
+  const ns=document.getElementById("nextSt");if(ns)ns.onclick=()=>{P=null;intro(next);};
+  document.getElementById("home").onclick=()=>go("home");
+  const queue=[];
+  if(L1.level>L0)queue.push(()=>levelUpModal(L0,L1.level));
+  badges.forEach(b=>queue.push(()=>badgeModal(b)));
+  if(dayReward)queue.push(()=>dayModal(dayReward));
+  runQueue(queue);
+  if(medal===3||record||L1.level>L0)confetti();
+}
+let Q=[];
+function runQueue(q){Q=q;nextModal();}
+function nextModal(){const f=Q.shift();if(f)setTimeout(f,350);}
+function levelUpModal(from,to){
+  const unl=[...OUTFITS,...ACCS,...BGS].filter(i=>i.lvl>from&&i.lvl<=to);
+  beep("win");
+  modal(`<div class="eyebrow">Nivel nou</div><div class="xpbig" style="font-size:72px">${to}</div><h2>${rankOf(to)}</h2>
+    ${unl.length?`<p style="margin:0;font-weight:600">Ai deblocat: ${unl.map(i=>`<b>${i.name}</b>`).join(", ")}</p>`:`<p class="muted" style="margin:0">La nivelurile următoare te așteaptă obiecte noi.</p>`}
+    <div class="row" style="justify-content:center">${unl.length?`<button class="btn teal" id="toW">Mergi la vestiar</button>`:""}<button class="btn ghost" id="ok1">Continuă</button></div>`,true);
+  document.getElementById("ok1").onclick=()=>{closeModal();nextModal();};
+  const w=document.getElementById("toW");if(w)w.onclick=()=>{closeModal();Q=[];go("wardrobe");};
+}
+function badgeModal(b){
+  modal(`<div class="eyebrow">Insignă nouă</div><div style="width:110px;margin:0 auto">${hexBadge(b.c,b.g)}</div><h2>${b.name}</h2><p class="muted" style="margin:0">${b.desc}</p><button class="btn teal" id="ok2">Super</button>`,true);
+  document.getElementById("ok2").onclick=()=>{closeModal();nextModal();};
+}
+function dayModal(r){
+  modal(`<div class="eyebrow">Misiune completă</div><div style="width:84px;margin:0 auto">${I.flame}</div><h2 style="font-size:30px">${r.count} ${r.count===1?"zi":"zile"} la rând</h2>
+    <p style="margin:0;font-weight:700;color:var(--gold)">+${r.xp} XP bonus</p>
+    ${r.week?`<p style="margin:0;font-weight:600">Săptămână completă! Ai primit un scut: îți păstrează seria dacă ratezi o zi.</p>`:""}
+    ${r.shield?`<p style="margin:0;font-weight:600">Ai folosit un scut ca să nu pierzi seria.</p>`:""}
+    <button class="btn teal" id="ok3">Acasă</button>`,true);
+  document.getElementById("ok3").onclick=()=>{closeModal();go("home");};
+}
+function nextMedalTip(n,m,tot,lim){
+  if(n===5)return m===2?"Pentru aur: rezolvă din prima, fără indiciu, în cel mult "+fmt(lim*.6)+".":"Pentru argint: rezolvă corect în cel mult "+fmt(lim)+".";
+  return m===2?`Pentru aur: minimum ${Math.ceil(tot*.9)} corecte din prima și cel mult ${fmt(lim*GOLD_T)}.`:`Pentru argint: minimum ${Math.ceil(tot*.8)} corecte din prima și cel mult ${fmt(lim*SILVER_T)}.`;
+}
+function completeDay(rec){
+  const t=today(),st=S.streak;let usedShield=false;
+  if(st.lastDay!==t){
+    if(st.lastDay===addDays(t,-1))st.count++;
+    else if(st.lastDay===addDays(t,-2)&&S.shields>0){S.shields--;st.count++;usedShield=true;}
+    else st.count=1;
+    st.lastDay=t;st.best=Math.max(st.best,st.count);
+  }
+  const fullDay=[1,2,3,4,5].every(k=>cfg()[k].c>=DEF_CFG[k].c);
+  if(rec&&fullDay){const v=Object.values(rec.stages);if(v.length&&v.every(x=>x.medal===3))S.stats.goldDay++;if(v.length&&v.every(x=>x.c===x.n))S.stats.perfectDay++;}
+  const r={xp:15,week:false,shield:usedShield,count:st.count};
+  if(st.count%7===0){r.week=true;r.xp+=40;S.shields=Math.min(3,S.shields+1);}
+  return r;
+}
+
+/* ---------- parent ---------- */
+function parentGate(){
+  modal(`<h2>Pentru părinți</h2><p style="margin:0" class="muted">Cât fac 12 × 7?</p><input class="txt" id="pg" inputmode="numeric" style="margin:0 auto;text-align:center" aria-label="Răspuns"><div class="msg bad" id="pgm"></div><div class="row" style="justify-content:center"><button class="btn ghost" data-close>Renunță</button><button class="btn teal" id="pgo">Intră</button></div>`);
+  const i=document.getElementById("pg");i.focus();
+  const ok=()=>{if(i.value.trim()==="84"){closeModal();go("parent");}else document.getElementById("pgm").textContent="Răspuns greșit.";};
+  document.getElementById("pgo").onclick=ok;i.onkeydown=e=>{if(e.key==="Enter")ok();};
+}
+function renderParent(){
+  const keys=Object.keys(S.days).sort().reverse().slice(0,21),L=levelInfo(S.xp);
+  const cell=r=>r?`${r.c}/${r.n}<br><span class="muted">${fmt(r.t)}${r.t>r.lim?" ⏱":""}</span>`:"–";
+  const missed=[];keys.slice(0,7).forEach(k=>{const d=S.days[k];Object.keys(d.stages||{}).forEach(s=>(d.stages[s].missed||[]).forEach(m=>missed.push(m)));});
+  app.innerHTML=`<section class="screen">
+    <div class="row"><div class="grow"><div class="eyebrow">Doar pentru adulți</div><h1 style="font-size:28px;margin-top:4px">Colțul părinților</h1></div><button class="btn ghost small" id="back">Înapoi</button></div>
+    <div class="panel"><div class="stat">
+      <span>Nivel</span><b>${L.level} (${S.xp} XP)</b>
+      <span>Seria curentă / cea mai lungă</span><b>${liveStreak()} / ${S.streak.best} zile</b>
+      <span>Scuturi disponibile</span><b>${S.shields}</b>
+      <span>Probleme rezolvate corect</span><b>${S.stats.problems}</b>
+      <span>Scăderi cu împrumut corecte</span><b>${S.stats.borrow}</b>
+      ${[1,2,3,4].map(n=>`<span>Record etapa ${n} (${DEF_CFG[n].c} ex. / ${fmt(DEF_CFG[n].m*60)})</span><b>${S.best[n]!=null?fmt(S.best[n]):"–"}</b>`).join("")}
+    </div></div>
+    ${settingsCard()}
+    <div class="panel"><h3 style="font-size:19px;margin-bottom:6px">Ultimele zile</h3>
+      <p class="muted" style="margin:0 0 8px;font-size:13px">Corecte din prima / total, apoi timpul. ⏱ = a depășit timpul propus.</p>
+      <div class="tblwrap"><table><thead><tr><th>Ziua</th><th>E1</th><th>E2</th><th>E3</th><th>E4</th><th>Probl.</th></tr></thead><tbody>
+      ${keys.length?keys.map(k=>{const d=S.days[k],st=d.stages||{};return `<tr><td><b>${k.slice(8)}.${k.slice(5,7)}</b>${d.done?" ✓":""}</td>${[1,2,3,4,5].map(n=>`<td>${cell(st[n])}</td>`).join("")}</tr>`;}).join(""):`<tr><td colspan="6" class="muted">Încă nu există antrenamente.</td></tr>`}
+      </tbody></table></div></div>
+    <div class="panel"><h3 style="font-size:19px;margin-bottom:8px">Greșeli din ultimele 7 zile</h3>
+      ${missed.length?`<div class="opts">${missed.slice(0,40).map(m=>`<span class="chip">${esc(m)}</span>`).join("")}</div><p class="muted" style="font-size:13px;margin:8px 0 0">Între paranteze: răspunsul corect.</p>`:`<p class="muted" style="margin:0">Nicio greșeală înregistrată.</p>`}
+    </div>
+    <div class="panel row"><div class="grow"><b>Bonus pentru teme</b><div class="muted" style="font-size:13px">Recompensă când își face bine temele.</div></div><button class="btn gold small" id="addxp">+20 XP</button></div>
+    <div class="panel row"><div class="grow"><b>Resetează tot</b><div class="muted" style="font-size:13px">Șterge personajul, XP-ul, insignele și istoricul.</div></div><button class="btn ghost small" id="reset">Resetează</button></div>
+  </section>`;
+  document.getElementById("back").onclick=()=>go("home");
+  bindSettings();
+  document.getElementById("addxp").onclick=e=>{S.xp+=20;newBadges();save();e.currentTarget.textContent="Adăugat";setTimeout(renderParent,800);};
+  document.getElementById("reset").onclick=()=>{modal(`<h2>Sigur resetezi?</h2><p style="margin:0" class="muted">Se pierd nivelul, insignele, seria și istoricul.</p><div class="row" style="justify-content:center"><button class="btn ghost" data-close>Nu</button><button class="btn" id="doReset">Da, resetează</button></div>`);
+    document.getElementById("doReset").onclick=()=>{S=defaultState();save();closeModal();go("home");};};
+}
+function settingsCard(){
+  const C=cfg(),st=S.settings||{},isToday=st.today&&st.today.date===today();
+  return `<div class="panel"><h3 style="font-size:19px;margin-bottom:6px">Antrenamentul zilnic</h3>
+    <p class="muted" style="margin:0 0 10px;font-size:13px;line-height:1.45">Pentru zilele cu multe teme poți micșora antrenamentul. Pune 0 ca să sari peste o etapă. Seria continuă dacă Sofia termină ce ai setat. Recordurile se numără doar cu valorile inițiale.</p>
+    <div class="tblwrap"><table><thead><tr><th>Etapa</th><th>Exerciții</th><th>Minute</th></tr></thead><tbody>
+    ${[1,2,3,4,5].map(n=>`<tr><td><b>${n}</b> ${STAGE[n].name}<br><span class="muted" style="font-size:12px">inițial: ${DEF_CFG[n].c} / ${DEF_CFG[n].m} min</span></td>
+      <td><input class="num" type="number" inputmode="numeric" id="cfgc${n}" min="0" max="${MAXC[n]}" step="1" value="${C[n].c}" aria-label="Exerciții etapa ${n}"></td>
+      <td><input class="num" type="number" inputmode="decimal" id="cfgm${n}" min="0.5" max="15" step="0.5" value="${C[n].m}" aria-label="Minute etapa ${n}"></td></tr>`).join("")}
+    </tbody></table></div>
+    <div class="row" style="margin-top:10px"><button class="btn ghost small" id="cfgBusy">Completează: zi aglomerată</button><button class="btn ghost small" id="cfgReset">Completează: valori inițiale</button></div>
+    <div class="row" style="margin-top:10px"><button class="btn gold small" id="cfgToday">Aplică doar azi</button><button class="btn teal small" id="cfgDef">Salvează pentru fiecare zi</button></div>
+    <p style="margin:10px 0 0;font-weight:700;font-size:14px" id="cfgMsg">${isToday?"Azi se folosesc setări doar pentru azi. Mâine revin cele obișnuite.":st.def?"Se folosesc setările tale obișnuite.":"Se folosesc valorile inițiale."}</p>
+    ${isToday?`<button class="btn ghost small" id="cfgClearToday" style="margin-top:8px">Anulează setările de azi</button>`:""}
+  </div>`;
+}
+function readCfg(){const o={};let any=false;for(let n=1;n<=5;n++){let c=parseInt(document.getElementById("cfgc"+n).value,10);let m=parseFloat(String(document.getElementById("cfgm"+n).value).replace(",","."));
+  if(!isFinite(c))c=0;c=Math.max(0,Math.min(MAXC[n],c));if(!isFinite(m))m=DEF_CFG[n].m;m=Math.max(.5,Math.min(15,Math.round(m*2)/2));o[n]={c,m};if(c>0)any=true;}
+  return any?o:null;}
+function fillCfg(o){for(let n=1;n<=5;n++){document.getElementById("cfgc"+n).value=o[n].c;document.getElementById("cfgm"+n).value=o[n].m;}}
+function checkDayAfterCfg(){const rec=S.days[today()];if(!rec||rec.done||!Object.keys(rec.stages||{}).length)return null;const C=cfg();if([1,2,3,4,5].every(k=>rec.stages[k]||C[k].c===0)){rec.done=true;const r=completeDay(rec);S.xp+=r.xp;newBadges();return r;}return null;}
+function bindSettings(){
+  const msg=t=>{document.getElementById("cfgMsg").textContent=t;};
+  document.getElementById("cfgBusy").onclick=()=>fillCfg(BUSY_CFG);
+  document.getElementById("cfgReset").onclick=()=>fillCfg(DEF_CFG);
+  const apply=todayOnly=>{const o=readCfg();if(!o){msg("Lasă cel puțin o etapă cu exerciții.");return;}
+    S.settings=S.settings||{};if(todayOnly)S.settings.today={date:today(),cfg:o};else{S.settings.def=o;S.settings.today=null;}
+    const r=checkDayAfterCfg();save();renderParent();
+    document.getElementById("cfgMsg").textContent=(todayOnly?"Salvat doar pentru azi.":"Salvat pentru fiecare zi.")+(r?" Sofia terminase deja etapele rămase, așa că misiunea s-a încheiat și seria a crescut.":"");};
+  document.getElementById("cfgToday").onclick=()=>apply(true);
+  document.getElementById("cfgDef").onclick=()=>apply(false);
+  const ct=document.getElementById("cfgClearToday");if(ct)ct.onclick=()=>{S.settings.today=null;save();renderParent();};
+}
+
+/* ---------- modal & confetti ---------- */
+function modal(html,noBackdropClose){closeModal();const o=document.createElement("div");o.className="overlay";o.innerHTML=`<div class="modal" role="dialog" aria-modal="true">${html}</div>`;document.body.appendChild(o);
+  o.querySelectorAll("[data-close]").forEach(b=>b.onclick=closeModal);if(!noBackdropClose)o.onclick=e=>{if(e.target===o)closeModal();};}
+function closeModal(){document.querySelectorAll(".overlay").forEach(o=>o.remove());}
+function confetti(){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+  const c=document.getElementById("confetti");c.hidden=false;const x=c.getContext("2d");c.width=innerWidth;c.height=innerHeight;
+  const cols=["#FF4FA3","#FFC23D","#22D3C5","#8B7BFF","#3F7BFF"];
+  const ps=Array.from({length:90},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height*.4,vx:(Math.random()-.5)*2.4,vy:2.5+Math.random()*3,r:3+Math.random()*4,c:cols[R(0,4)],a:Math.random()*6}));
+  let f=0;(function loop(){x.clearRect(0,0,c.width,c.height);ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.a+=.12;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.r,-p.r/3,p.r*2,p.r*.66);x.restore();});
+    if(++f<130)requestAnimationFrame(loop);else{x.clearRect(0,0,c.width,c.height);c.hidden=true;}})();
+}
+
+/* ---------- boot ---------- */
+try{const raw=localStorage.getItem(KEY);if(raw)S=merge(JSON.parse(raw));}catch(e){}
+route();
+initDb();
+})();
+</script>
+</body>
+</html>
