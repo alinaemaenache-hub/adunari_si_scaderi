@@ -153,6 +153,8 @@ h1,h2,h3{font-weight:800;margin:0;line-height:1.1;text-wrap:balance;letter-spaci
 .bubble.hide{transform:scale(.3);opacity:0}
 .problem{font-size:clamp(19px,4.4vw,23px);line-height:1.55;text-align:left;font-weight:500;max-width:62ch;margin:0 auto}
 .answerbox{font-weight:800;font-size:44px;min-width:3.6em;display:inline-block}
+.term{font-weight:800;text-decoration:underline;text-decoration-color:var(--gold);text-decoration-thickness:2px;text-underline-offset:4px}
+.termref{display:grid;gap:4px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,194,61,.3);font-weight:600}
 .hint{background:rgba(255,194,61,.12);border:1px solid rgba(255,194,61,.4);color:#FFE3A3;border-radius:12px;padding:11px 13px;text-align:left;font-weight:600}
 
 /* overlays & result */
@@ -214,7 +216,7 @@ const STAGE={
   2:{name:"Numărul ascuns",desc:"Găsește numărul care lipsește, până la 10"},
   3:{name:"Numere mari",desc:"Adunări și scăderi până la 1000, în coloană"},
   4:{name:"Detectivul numerelor",desc:"Numărul care lipsește, până la 1000"},
-  5:{name:"Problema zilei",desc:"Problemă de clasa a III-a, cu mai multe operații"}
+  5:{name:"Problema zilei",desc:"Problemă de clasa a III-a sau exercițiu cu termenii operațiilor"}
 };
 const DEF_CFG={1:{c:25,m:2},2:{c:25,m:3},3:{c:10,m:5},4:{c:5,m:5},5:{c:1,m:5}};
 const MAXC={1:40,2:40,3:20,4:20,5:3};
@@ -553,7 +555,29 @@ const PATTERN=["carry","no","round","round","no","carry","round","no","carry","r
 const kindsN=k=>shuffle(Array.from({length:k},(_,i)=>PATTERN[i%10]));
 function genS3(n){return kindsN(n).map(k=>{const p=genPair(k);return{parts:[p.a,p.op,p.b,"=",p.r],u:4,answer:p.r,mode:"pad",vertical:true,borrow:p.op==="−"&&hasBorrow(p.a,p.b)};});}
 function genS4(n){return kindsN(n).map(k=>{const p=genPair(k);const first=Math.random()<.5;return{parts:[p.a,p.op,p.b,"=",p.r],u:first?0:2,answer:first?p.a:p.b,mode:"pad",vertical:true,borrow:p.op==="−"&&hasBorrow(p.a,p.b)};});}
-function genS5(k){return Array.from({length:k},(_,i)=>{const idx=(S.problemIdx+i)%PROBLEMS.length;const pr=PROBLEMS[idx];return{problem:true,idx,text:pr.t,answer:pr.a,unit:pr.u,hint:pr.h,mode:"pad"};});}
+const TW=w=>`<u class="term">${w}</u>`;
+const TERM_REF=`<div class="termref"><span>${TW("termen")} + ${TW("termen")} = ${TW("sumă")}</span><span>${TW("descăzut")} − ${TW("scăzător")} = ${TW("diferență")}</span><span>${TW("factor")} × ${TW("factor")} = ${TW("produs")}</span><span>${TW("deîmpărțit")} : ${TW("împărțitor")} = ${TW("cât")}</span></div>`;
+const TERM_T=[
+  ()=>{const F=R(40,400),s=R(30,500);if(F+s>999)return null;return{t:`${TW("Descăzutul")} este ${F+s}, iar ${TW("diferența")} este ${F}. Cât este ${TW("scăzătorul")}?`,a:s,h:"Scăzătorul = descăzutul − diferența."};},
+  ()=>{const s=R(30,450),F=R(40,450);if(s+F>999)return null;return{t:`${TW("Scăzătorul")} este ${s}, iar ${TW("diferența")} este ${F}. Cât este ${TW("descăzutul")}?`,a:s+F,h:"Descăzutul = scăzătorul + diferența."};},
+  ()=>{const x=R(120,450),y=R(60,400),z=R(50,x+y-10);if(x+y>999)return null;return{t:`${TW("Descăzutul")} este suma numerelor ${x} și ${y}, iar ${TW("scăzătorul")} este ${z}. Cât este ${TW("diferența")}?`,a:x+y-z,h:`Află întâi descăzutul: ${x} + ${y}. Apoi scade scăzătorul.`};},
+  ()=>{const D=R(200,900),d=R(15,150);return{t:`${TW("Descăzutul")} este ${D}, iar ${TW("scăzătorul")} este cu ${d} mai mic decât ${TW("descăzutul")}. Cât este ${TW("diferența")}?`,a:d,h:"Diferența arată cu cât este mai mare descăzutul decât scăzătorul."};},
+  ()=>{const k=R(2,3),b=R(2,k===2?5:3),a=R(2,10);return{t:`Primul ${TW("factor")} este ${a}, iar al doilea ${TW("factor")} este ${k===2?"dublul":"triplul"} lui ${b}. Cât este ${TW("produsul")}?`,a:a*k*b,h:`Al doilea factor: ${b} × ${k}. Apoi înmulțește factorii.`};},
+  ()=>{const n=R(3,10);return{t:`Află ${TW("produsul")} dintre cel mai mare număr de o cifră și numărul ${n}.`,a:9*n,h:"Cel mai mare număr de o cifră este 9."};},
+  ()=>{const a=R(3,10),b=R(3,10);return{t:`${TW("Produsul")} a doi ${TW("factori")} este ${a*b}. Unul dintre ${TW("factori")} este ${a}. Care este celălalt ${TW("factor")}?`,a:b,h:"Factorul necunoscut = produsul : factorul cunoscut."};},
+  ()=>{const n=R(4,9);return{t:`Un ${TW("factor")} este cel mai mic număr de două cifre, iar celălalt ${TW("factor")} este ${n}. Cât este ${TW("produsul")}?`,a:10*n,h:"Cel mai mic număr de două cifre este 10."};},
+  ()=>{const q=R(3,10),c=R(3,9),N=q*c,x=R(Math.max(1,N-40),N-1);return{t:`${TW("Deîmpărțitul")} este suma numerelor ${x} și ${N-x}, iar ${TW("împărțitorul")} este ${c}. Cât este ${TW("câtul")}?`,a:q,h:`Află întâi deîmpărțitul: ${x} + ${N-x}. Apoi împarte la împărțitor.`};},
+  ()=>{const q=R(4,10),d=R(3,9);return{t:`Dacă ${TW("câtul")} este ${q} și ${TW("împărțitorul")} este ${d}, află ${TW("deîmpărțitul")}.`,a:q*d,h:"Deîmpărțitul = câtul × împărțitorul."};},
+  ()=>{const q=R(3,9),d=R(3,9);return{t:`${TW("Deîmpărțitul")} este ${q*d}, iar ${TW("câtul")} este ${q}. Care este ${TW("împărțitorul")}?`,a:d,h:"Împărțitorul = deîmpărțitul : câtul."};},
+  ()=>{const k=R(2,9),m=R(3,10),N=k*m;if(N<12)return null;const x=R(Math.ceil(N/3),N-2);return{t:`Află numărul de ${k} ori mai mic decât suma numerelor ${x} și ${N-x}.`,a:m,h:`Suma: ${x} + ${N-x}. „De ${k} ori mai mic” înseamnă împărțire la ${k}.`};},
+  ()=>{const a=R(4,10),b=R(4,10),d=R(2,9),q=R(2,9);if(a*b<q)return null;return{t:`Află ${TW("diferența")} dintre ${TW("produsul")} numerelor ${a} și ${b} și ${TW("câtul")} numerelor ${q*d} și ${d}.`,a:a*b-q,h:`Calculează întâi produsul (${a} × ${b}) și câtul (${q*d} : ${d}), apoi scade.`};},
+  ()=>{const a=R(3,10),b=R(3,10),d=R(2,9),q=R(2,10);return{t:`Adună ${TW("produsul")} numerelor ${a} și ${b} cu ${TW("câtul")} numerelor ${q*d} și ${d}.`,a:a*b+q,h:`Produsul: ${a} × ${b}. Câtul: ${q*d} : ${d}. Apoi adună.`};},
+  ()=>{const S=R(200,999),a=R(60,S-40);return{t:`${TW("Suma")} a doi ${TW("termeni")} este ${S}. Unul dintre ${TW("termeni")} este ${a}. Care este celălalt ${TW("termen")}?`,a:S-a,h:"Termenul necunoscut = suma − termenul cunoscut."};},
+  ()=>{const a=R(3,10),b=R(3,10),c=R(20,300);return{t:`${TW("Scăzătorul")} este ${TW("produsul")} numerelor ${a} și ${b}, iar ${TW("diferența")} este ${c}. Află ${TW("descăzutul")}.`,a:a*b+c,h:`Scăzătorul: ${a} × ${b}. Descăzutul = scăzătorul + diferența.`};},
+  ()=>{const q=R(2,10),y=R(10,80),d=R(3,9);return{t:`${TW("Câtul")} este diferența numerelor ${y+q} și ${y}, iar ${TW("împărțitorul")} este ${d}. Află ${TW("deîmpărțitul")}.`,a:q*d,h:`Câtul: ${y+q} − ${y}. Deîmpărțitul = câtul × împărțitorul.`};}
+];
+function genTerm(){for(let g=0;g<100;g++){const r=TERM_T[R(0,TERM_T.length-1)]();if(r&&r.a>=0)return{problem:true,term:true,idx:-1,text:r.t,answer:r.a,unit:"",hint:r.h+TERM_REF,mode:"pad"};}return{problem:true,term:true,idx:-1,text:`${TW("Descăzutul")} este 210, iar ${TW("diferența")} este 85. Cât este ${TW("scăzătorul")}?`,answer:125,unit:"",hint:"Scăzătorul = descăzutul − diferența."+TERM_REF,mode:"pad"};}
+function genS5(k){return Array.from({length:k},(_,i)=>{const g=S.problemIdx+i;if(g%2===1)return genTerm();const idx=Math.floor(g/2)%PROBLEMS.length;const pr=PROBLEMS[idx];return{problem:true,idx,text:pr.t,answer:pr.a,unit:pr.u,hint:pr.h,mode:"pad"};});}
 const GEN={1:genS1,2:genS2,3:genS3,4:genS4,5:genS5};
 
 /* ---------- routing ---------- */
@@ -711,6 +735,10 @@ function renderGuide(){
     ${sec("Cum scrii răspunsul",`<p>Scrii cifrele cu tastatura de pe ecran și apeși <b>OK</b>. La unele exerciții alegi răspunsul dintre 3 butoane.</p>
       <p><b>La numerele mari scrii de la dreapta la stânga</b>, ca în caiet. Exemplu: 723 − 656. Scrii întâi <b>7</b> (unitățile), apoi <b>6</b> (zecile). Căsuța roz arată unde urmează să scrii.</p>
       <p><b>Căsuțele de sus</b> sunt ciorna ta. La scădere, atinge căsuța de deasupra cifrei de la care te împrumuți: apare un punct. La adunare apare „1”, când ai 1 în minte. Nu contează la punctaj, sunt doar ca să te ajute.</p>`,demoVert())}
+    ${sec("Cuvintele matematicii",`<p>Fiecare număr dintr-o operație are un nume. Le întâlnești la problema zilei.</p>
+      <div class="termref" style="border:0;margin:0 0 10px;padding:0">${TERM_REF.replace('<div class="termref">','').replace(/<\/div>$/,'')}</div>
+      <p><b>Cum afli numărul care lipsește:</b></p>
+      <ul><li>Termenul necunoscut = suma − celălalt termen</li><li>Scăzătorul = descăzutul − diferența</li><li>Descăzutul = scăzătorul + diferența</li><li>Factorul necunoscut = produsul : celălalt factor</li><li>Deîmpărțitul = câtul × împărțitorul</li><li>Împărțitorul = deîmpărțitul : câtul</li></ul>`)}
     ${sec("Când greșești",`<ul><li>La exerciții ai <b>2 încercări</b>. Dacă și a doua e greșită, vezi răspunsul corect și treci mai departe.</li><li>La problema zilei ai <b>3 încercări</b>. După un minut poți cere un <b>indiciu</b> cu primul pas.</li><li>Folosește o foaie și un creion pentru calcule, e voie!</li></ul>`)}
     ${sec("Medalii",`<p>La finalul fiecărei etape primești o medalie:</p><table><tbody>
       <tr><td><span class="price">${medalSVG(3,22)} <b>Aur</b></span><br><span class="muted">minimum 90% corecte din prima și cel mult 70% din timp</span></td><td><b>+15 XP</b></td></tr>
@@ -867,7 +895,7 @@ function submit(val,btn){
     if(P.tries>=maxTries){
       m.className="msg center bad";m.textContent=`Răspunsul corect: ${it.answer}`;
       setSlot(String(it.answer));s.classList.remove("bad");s.classList.add("good");
-      P.missed.push(it.problem?"Problema "+(it.idx+1)+": ["+it.answer+"]":eqText(it));
+      P.missed.push(it.problem?(it.term?"Termeni: "+it.text.replace(/<[^>]+>/g,"").slice(0,70)+"… ["+it.answer+"]":"Problema "+(it.idx+1)+": ["+it.answer+"]"):eqText(it));
       setTimeout(nextQ,1900);
     } else {
       m.className="msg center bad";m.textContent=it.problem?(P.tries===1?"Nu încă. Verifică fiecare pas.":"Mai ai o încercare. Citește din nou întrebarea."):"Mai încearcă o dată.";
