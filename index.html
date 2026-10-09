@@ -145,7 +145,7 @@ h1,h2,h3{font-weight:800;margin:0;line-height:1.1;text-wrap:balance;letter-spaci
 .pad .ok{background:var(--teal);color:#062A2A;border-color:var(--teal);box-shadow:0 4px 0 var(--tealD)}
 .pad .del{color:var(--mag)}
 .choices{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.choices button{width:96px;height:80px;border-radius:16px;font-weight:800;font-size:38px;background:var(--panel2);border:2px solid var(--line);box-shadow:0 4px 0 #0B1028;font-variant-numeric:tabular-nums}
+.choices button{width:auto;min-width:96px;padding:0 14px;height:80px;border-radius:16px;font-weight:800;font-size:38px;background:var(--panel2);border:2px solid var(--line);box-shadow:0 4px 0 #0B1028;font-variant-numeric:tabular-nums}
 .coach{position:fixed;left:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));display:flex;align-items:flex-end;gap:8px;pointer-events:none;z-index:5}
 .coach .face{width:56px;height:56px;border-radius:50%;overflow:hidden;background:var(--panel2);border:2px solid var(--mag)}
 .coach .face svg{width:100%;height:100%}
@@ -153,6 +153,7 @@ h1,h2,h3{font-weight:800;margin:0;line-height:1.1;text-wrap:balance;letter-spaci
 .bubble.hide{transform:scale(.3);opacity:0}
 .problem{font-size:clamp(19px,4.4vw,23px);line-height:1.55;text-align:left;font-weight:500;max-width:62ch;margin:0 auto}
 .answerbox{font-weight:800;font-size:44px;min-width:3.6em;display:inline-block}
+.rq{font-size:22px;font-weight:700;color:var(--muted)}.rq b{color:var(--gold)}
 .term{font-weight:800;text-decoration:underline;text-decoration-color:var(--gold);text-decoration-thickness:2px;text-underline-offset:4px}
 .termref{display:grid;gap:4px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,194,61,.3);font-weight:600}
 .hint{background:rgba(255,194,61,.12);border:1px solid rgba(255,194,61,.4);color:#FFE3A3;border-radius:12px;padding:11px 13px;text-align:left;font-weight:600}
@@ -216,11 +217,13 @@ const STAGE={
   2:{name:"Numărul ascuns",desc:"Găsește numărul care lipsește, până la 10"},
   3:{name:"Numere mari",desc:"Adunări și scăderi până la 1000, în coloană"},
   4:{name:"Detectivul numerelor",desc:"Numărul care lipsește, până la 1000"},
-  5:{name:"Problema zilei",desc:"Problemă de clasa a III-a sau exercițiu cu termenii operațiilor"}
+  6:{name:"Rotunjiri",desc:"Rotunjește la zeci, sute și mii"},
+  5:{name:"Problema zilei",desc:"O problemă de clasa a III-a (sau cu termenii operațiilor) și o problemă despre timp"}
 };
-const DEF_CFG={1:{c:25,m:2},2:{c:25,m:3},3:{c:10,m:5},4:{c:5,m:5},5:{c:1,m:5}};
-const MAXC={1:40,2:40,3:20,4:20,5:3};
-const BUSY_CFG={1:{c:12,m:1},2:{c:12,m:1.5},3:{c:5,m:2.5},4:{c:3,m:3},5:{c:1,m:5}};
+const DEF_CFG={1:{c:20,m:2},2:{c:10,m:3},3:{c:5,m:3},4:{c:4,m:4},6:{c:5,m:2},5:{c:2,m:8}};
+const ORDER=[1,2,3,4,6,5];const pos=n=>ORDER.indexOf(n)+1;
+const MAXC={1:40,2:40,3:20,4:20,6:30,5:3};
+const BUSY_CFG={1:{c:10,m:1},2:{c:5,m:1.5},3:{c:3,m:2},4:{c:2,m:2},6:{c:3,m:1},5:{c:1,m:5}};
 const SKINS=["#FFE4D2","#F7CFB2","#E3AC86","#B77B57","#7E5036","#FAC8D6","#DCCBF7","#BBA6F0","#C9EBC4","#C3E4F8"];
 const SKIN_NAMES=["Piele 1","Piele 2","Piele 3","Piele 4","Piele 5","Roz","Lila","Mov","Mentă","Bleu"];
 const HAIRC=["#3A2418","#7A4A2A","#C98A4A","#F2D06B","#F7F1E6","#1E1A36","#F58BBE","#9C7CF4","#6FC7F2","#5ED3A6","#E2475B"];
@@ -322,9 +325,10 @@ const BADGES=[
   {id:"gold50",name:"Colecționara de aur",desc:"Câștigă 50 de medalii de aur.",c:"#C98E0C",g:G.crown,test:s=>s.stats.gold>=50},
   {id:"goldday",name:"Zi de aur",desc:"Aur la toate etapele dintr-o zi cu antrenament întreg.",c:"#FF7A45",g:G.clock,test:s=>s.stats.goldDay>=1},
   {id:"perfect",name:"Fără greșeală",desc:"O zi cu antrenament întreg, toate răspunsurile corecte din prima.",c:"#139C91",g:G.check,test:s=>s.stats.perfectDay>=1},
-  {id:"fast",name:"Fulger",desc:"Etapa 1 completă (25 de exerciții) în cel mult 1:15, cu minimum 23 corecte din prima.",c:"#3F7BFF",g:G.bolt,test:s=>s.stats.fast>=1},
+  {id:"fast",name:"Fulger",desc:"Etapa 1 completă (20 de exerciții) în cel mult 1:00, cu minimum 18 corecte din prima.",c:"#3F7BFF",g:G.bolt,test:s=>s.stats.fast>=1},
   {id:"records",name:"Recordmena",desc:"Îți bați propriul record de 10 ori.",c:"#FF4FA3",g:G.bolt,test:s=>s.stats.records>=10},
   {id:"borrow",name:"Maestra împrumutului",desc:"100 de scăderi cu împrumut corecte.",c:"#8B7BFF",g:G.minus,test:s=>s.stats.borrow>=100},
+  {id:"rounder",name:"Rotunjitoarea",desc:"75 de rotunjiri corecte din prima.",c:"#FF7A45",g:G.check,test:s=>(s.stats.round||0)>=75},
   {id:"solver",name:"Rezolvitoare",desc:"15 probleme rezolvate din prima încercare.",c:"#139C91",g:G.bulb,test:s=>s.stats.problemsFirst>=15},
   {id:"detective",name:"Detectiva",desc:"40 de probleme rezolvate din prima încercare.",c:"#3F7BFF",g:G.eye,test:s=>s.stats.problemsFirst>=40},
   {id:"lvl5",name:"Nivelul 5",desc:"Ajunge la nivelul 5.",c:"#FF7A45",g:G.star,test:s=>levelInfo(s.xp).level>=5},
@@ -465,10 +469,10 @@ function fixProfile(p){
 
 /* ---------- state ---------- */
 const KEY="lumea-sofiei-v1", DOC="progress/sofia";
-function cfg(){const st=S.settings||{};const t=st.today&&st.today.date===today()?st.today.cfg:null;const base=t||st.def||DEF_CFG;const o={};for(let n=1;n<=5;n++){const x=base[n]||DEF_CFG[n];o[n]={c:x.c,m:x.m};}return o;}
+function cfg(){const st=S.settings||{};const t=st.today&&st.today.date===today()?st.today.cfg:null;const base=t||st.def||DEF_CFG;const o={};for(const n of ORDER){const x=base[n]||DEF_CFG[n];o[n]={c:x.c,m:x.m};}return o;}
 const isDefault=(n,c)=>c.c===DEF_CFG[n].c&&c.m===DEF_CFG[n].m;
 function defaultProfile(){return{created:false,name:"Sofia",skin:1,hair:"pigtails",hairColor:1,hairTip:-1,eyes:"round",eyeColor:0,mouth:"smile",outfit:"hoodie",outfitColor:0,acc:"bow",bg:"sky"};}
-function defaultState(){return{v:2,settings:{def:null,today:null},updatedAt:0,profile:defaultProfile(),xp:0,streak:{count:0,best:0,lastDay:null},shields:0,days:{},best:{},problemIdx:0,sound:true,seenTour:false,stats:{borrow:0,problems:0,problemsFirst:0,gold:0,goldDay:0,perfectDay:0,records:0,fast:0},badges:[],rules:3};}
+function defaultState(){return{v:2,settings:{def:null,today:null},updatedAt:0,profile:defaultProfile(),xp:0,streak:{count:0,best:0,lastDay:null},shields:0,days:{},best:{},problemIdx:0,sound:true,seenTour:false,stats:{borrow:0,problems:0,problemsFirst:0,gold:0,goldDay:0,perfectDay:0,records:0,fast:0,round:0},badges:[],rules:4};}
 function merge(x){
   const d=defaultState();if(!x||typeof x!=="object")return d;
   const o=Object.assign(d,x);
@@ -481,7 +485,8 @@ function merge(x){
   fixProfile(o.profile);
   o.streak=Object.assign(defaultState().streak,x.streak||{});o.stats=Object.assign(defaultState().stats,x.stats||{});
   o.days=x.days||{};o.settings=x.settings||{def:null,today:null};o.best=x.best||{};o.badges=x.badges||[];
-  if((x.rules||0)<3){delete o.best[4];delete o.best[3];o.rules=3;o.badges=[];o.badges=BADGES.filter(b=>{try{return b.test(o);}catch(e){return false;}}).map(b=>b.id);}
+  if((x.rules||0)<4&&(x.rules||0)>=3){[1,2,3,4,6].forEach(k=>delete o.best[k]);if(o.settings)o.settings.def=null;o.rules=4;}
+  if((x.rules||0)<3){delete o.best[4];delete o.best[3];o.rules=4;o.badges=[];o.badges=BADGES.filter(b=>{try{return b.test(o);}catch(e){return false;}}).map(b=>b.id);}
   return o;
 }
 let S=defaultState(), db=null, pending=false, chain=Promise.resolve();
@@ -577,8 +582,53 @@ const TERM_T=[
   ()=>{const q=R(2,10),y=R(10,80),d=R(3,9);return{t:`${TW("Câtul")} este diferența numerelor ${y+q} și ${y}, iar ${TW("împărțitorul")} este ${d}. Află ${TW("deîmpărțitul")}.`,a:q*d,h:`Câtul: ${y+q} − ${y}. Deîmpărțitul = câtul × împărțitorul.`};}
 ];
 function genTerm(){for(let g=0;g<100;g++){const r=TERM_T[R(0,TERM_T.length-1)]();if(r&&r.a>=0)return{problem:true,term:true,idx:-1,text:r.t,answer:r.a,unit:"",hint:r.h+TERM_REF,mode:"pad"};}return{problem:true,term:true,idx:-1,text:`${TW("Descăzutul")} este 210, iar ${TW("diferența")} este 85. Cât este ${TW("scăzătorul")}?`,answer:125,unit:"",hint:"Scăzătorul = descăzutul − diferența."+TERM_REF,mode:"pad"};}
-function genS5(k){return Array.from({length:k},(_,i)=>{const g=S.problemIdx+i;if(g%2===1)return genTerm();const idx=Math.floor(g/2)%PROBLEMS.length;const pr=PROBLEMS[idx];return{problem:true,idx,text:pr.t,answer:pr.a,unit:pr.u,hint:pr.h,mode:"pad"};});}
-const GEN={1:genS1,2:genS2,3:genS3,4:genS4,5:genS5};
+const hm=(h,m)=>`${h}:${String(m).padStart(2,"0")}`;
+const durTxt=(h,m)=>[h?(h===1?"o oră":h+" ore"):"",m?(m===1?"un minut":m+(m>=20?" de minute":" minute")):""].filter(Boolean).join(" și ");
+const TIME_T=[
+  ()=>{const ev=[["Filmul","începe","se termină"],["Antrenamentul de înot","începe","se termină"],["Petrecerea","începe","se termină"],["Excursia cu trenul","pornește","ajunge la destinație"]][R(0,3)];
+    const h=R(8,18),m=R(0,11)*5,dh=R(0,2),dm=R(1,11)*5,t=h*60+m+dh*60+dm;if(t>=23*60)return null;
+    return{t:`${ev[0]} ${ev[1]} la ora <b>${hm(h,m)}</b> și durează ${durTxt(dh,dm)}. La ce oră ${ev[2]}?`,a:Math.floor(t/60)*100+t%60,clock:true,h:`Adună întâi orele, apoi minutele. Dacă minutele trec de 60, mai adaugi o oră (1 oră = 60 de minute).`};},
+  ()=>{const h=R(9,19),m=R(0,11)*5,dh=R(1,2),dm=R(1,11)*5,end=h*60+m,start=end-dh*60-dm;if(start<6*60)return null;
+    return{t:`Trenul a ajuns în gară la ora <b>${hm(h,m)}</b>, după un drum de ${durTxt(dh,dm)}. La ce oră a plecat trenul?`,a:Math.floor(start/60)*100+start%60,clock:true,h:"Mergi înapoi în timp: scade orele, apoi minutele. Dacă nu ajung minutele, împrumuți o oră = 60 de minute."};},
+  ()=>{const h=R(14,18),m=R(0,11)*5,d=R(5,22)*5,e=h*60+m+d;
+    return{t:`Sofia a început temele la ora <b>${hm(h,m)}</b> și a terminat la ora <b>${hm(Math.floor(e/60),e%60)}</b>. Câte minute a lucrat?`,a:d,u:"minute",h:`Numără minutele până la ora fixă următoare, apoi adaugă restul. 1 oră = 60 de minute.`};},
+  ()=>{const h=R(1,3),m=R(1,11)*5;return{t:`Câte minute au ${durTxt(h,m)}?`,a:h*60+m,u:"minute",h:`1 oră = 60 de minute. Calculează ${h} × 60, apoi adaugă ${m}.`};},
+  ()=>{const w=R(2,5),d=R(1,6);return{t:`Vacanța durează ${w} săptămâni și ${d===1?"o zi":d+" zile"}. Câte zile durează vacanța?`,a:w*7+d,u:"zile",h:`O săptămână are 7 zile: ${w} × 7, apoi adaugă ${d}.`};},
+  ()=>{const d=R(2,4),h=R(0,1)?R(1,12):0;return{t:`Câte ore sunt în ${d} zile${h?` și ${h} ${h===1?"oră":"ore"}`:""}?`,a:d*24+h,u:"ore",h:`O zi are 24 de ore: ${d} × 24${h?`, apoi adaugă ${h}`:""}.`};},
+  ()=>{const y=R(1,8),mo=R(1,11);return{t:`Fratele Sofiei are ${y===1?"un an":y+" ani"} și ${mo===1?"o lună":mo+" luni"}. Câte luni are în total?`,a:y*12+mo,u:"luni",h:`Un an are 12 luni: ${y} × 12, apoi adaugă ${mo}.`};},
+  ()=>{const m=R(2,6)*5;return{t:`Ana citește câte ${m} minute în fiecare zi, timp de o săptămână. Câte minute citește în toată săptămâna?`,a:m*7,u:"minute",h:`O săptămână are 7 zile: ${m} × 7.`};},
+  ()=>{const L=[45,50][R(0,1)],B=[10,15][R(0,1)],k=R(2,4),t=8*60+(k-1)*(L+B);
+    return{t:`La școală, prima oră începe la <b>8:00</b>. O oră de curs durează ${L} de minute, iar fiecare pauză ${B} minute. La ce oră începe ora a ${["","","doua","treia","patra"][k]}?`,a:Math.floor(t/60)*100+t%60,clock:true,h:`Fiecare oră de curs împreună cu pauza durează ${L} + ${B} minute. Adună de ${k-1} ori pornind de la 8:00.`};},
+  ()=>{const w=R(1,3),day=R(1,31-7*w);return{t:`Azi este <b>${day} octombrie</b>. Ce dată din octombrie va fi peste ${w===1?"o săptămână":w+" săptămâni"}? (scrie doar ziua)`,a:day+7*w,u:"octombrie",h:`O săptămână are 7 zile: adună ${w===1?"7":w+" × 7"} la ${day}.`};}
+];
+function genTime(){for(let g=0;g<100;g++){const r=TIME_T[R(0,TIME_T.length-1)]();if(r)return{problem:true,time:true,clock:!!r.clock,idx:-1,text:r.t,answer:r.a,unit:r.u||"",hint:r.h+`<div class="termref"><span>1 oră = 60 de minute</span><span>1 zi = 24 de ore</span><span>1 săptămână = 7 zile</span><span>1 an = 12 luni</span></div>`,mode:"pad"};}return null;}
+function regularProblem(word,d){if(!word)return genTerm();const idx=Math.floor(d/2)%PROBLEMS.length;const pr=PROBLEMS[idx];return{problem:true,idx,text:pr.t,answer:pr.a,unit:pr.u,hint:pr.h,mode:"pad"};}
+function genS5(k){const d=S.problemIdx,word=d%2===0;const out=[regularProblem(word,d)];if(k>=2)out.push(genTime());if(k>=3)out.push(regularProblem(!word,word?d:d+1));return out.slice(0,k);}
+const fmtAns=it=>it.clock?String(Math.floor(it.answer/100))+":"+String(it.answer%100).padStart(2,"0"):String(it.answer);
+const RUNIT={10:"zeci",100:"sute",1000:"mii"};
+function roundNum(n,u){return Math.floor((n+u/2)/u)*u;}
+function genS6(k){
+  const out=[],seen=new Set();
+  const units=shuffle(Array.from({length:k},(_,i)=>[10,100,1000][i%3]));
+  for(let i=0;i<k;i++){
+    const u=units[i];let n,g=0;
+    do{
+      const tricky=Math.random()<.35;
+      if(u===10){n=tricky?R(1,99)*10+5:R(11,999);if(Math.random()<.15)n=R(1,9)*100+R(95,99);}
+      else if(u===100){n=tricky?R(1,9)*100+50+R(0,9):R(101,999);if(Math.random()<.15)n=R(951,999);}
+      else{n=tricky?R(1,9)*1000+500+R(0,99):R(1001,9999);if(Math.random()<.12)n=R(9500,9999);}
+      g++;
+    }while((n%u===0||seen.has(n+"|"+u))&&g<200);
+    seen.add(n+"|"+u);
+    const ans=roundNum(n,u),lo=Math.floor(n/u)*u,hi=lo+u;
+    const mode=Math.random()<.4?"choice":"pad";
+    const opts=mode==="choice"?shuffle(Array.from(new Set([lo,hi,ans,ans===lo?lo-u>=0?lo-u:hi+u:hi+u])).slice(0,3)):null;
+    if(opts&&!opts.includes(ans))opts[0]=ans;
+    out.push({round:true,n,u,answer:ans,lo,hi,mode,options:opts?shuffle(opts):null});
+  }
+  return out;
+}
+const GEN={1:genS1,2:genS2,3:genS3,4:genS4,5:genS5,6:genS6};
 
 /* ---------- routing ---------- */
 const app=document.getElementById("app");
@@ -595,14 +645,14 @@ function go(s){screen=s;P=null;draft=null;route();}
 /* ---------- home ---------- */
 function renderHome(){
   const t=today(),rec=S.days[t]||{stages:{}},streak=liveStreak(),C=cfg(),req=n=>C[n].c>0;
-  let next=1;while(next<=5&&((rec.stages&&rec.stages[next])||!req(next)))next++;
-  const done=next>5, L=levelInfo(S.xp);
+  const next=ORDER.find(n=>!(rec.stages&&rec.stages[n])&&req(n));
+  const done=!next, L=levelInfo(S.xp);
   let week="";for(let i=6;i>=0;i--){const k=addDays(t,-i);const on=S.days[k]&&S.days[k].done;const [y,m,d]=k.split("-").map(Number);const w=new Date(y,m-1,d).getDay();
     week+=`<div class="wd ${on?"on":""} ${i===0?"today":""}"><i></i><span>${i===0?"Azi":DOW[w]}</span></div>`;}
-  let rows="";for(let n=1;n<=5;n++){const r=rec.stages&&rec.stages[n];const skip=!r&&!req(n);const cls=(r?"done":skip?"skip":n===next?"next":"")+(n===1?" first":"");
+  let rows="";for(const n of ORDER){const r=rec.stages&&rec.stages[n];const skip=!r&&!req(n);const cls=(r?"done":skip?"skip":n===next?"next":"")+(n===1?" first":"");
     const meta=skip?"Liber azi":`${n===5?(C[n].c===1?"1 problemă":C[n].c+" probleme"):C[n].c+" exerciții"} · ${fmt(C[n].m*60)}`;
     const status=r?`${fmt(r.t)}<br>+${r.xp||0} XP`:n===next?"Urmează":skip?"":"Blocat";
-    rows+=`<button class="stg ${cls}" data-stage="${n}" ${(!r&&n!==next)?"disabled":""}><span class="num">${r?(r.medal?medalSVG(r.medal,28):"✓"):n}</span><span><div class="t">${STAGE[n].name}</div><div class="s">${meta}</div></span><span class="st">${status}</span></button>`;}
+    rows+=`<button class="stg ${cls}" data-stage="${n}" ${(!r&&n!==next)?"disabled":""}><span class="num">${r?(r.medal?medalSVG(r.medal,28):"✓"):pos(n)}</span><span><div class="t">${STAGE[n].name}</div><div class="s">${meta}</div></span><span class="st">${status}</span></button>`;}
   const shortDay=S.settings&&S.settings.today&&S.settings.today.date===t;
   const recent=S.badges.slice(-5).map(id=>BADGES.find(b=>b.id===id)).filter(Boolean);
   app.innerHTML=`<section class="screen">
@@ -630,10 +680,10 @@ function renderHome(){
       </button>
     </div>
     <div class="panel mission">
-      <div class="row" style="margin-bottom:6px"><div class="grow"><div class="eyebrow">Misiunea de azi</div>${shortDay?`<div style="font-size:13px;font-weight:700;color:var(--gold);margin-top:4px">Azi antrenamentul e mai scurt</div>`:""}</div><span class="muted" style="font-weight:700;font-size:14px">${done?"Completă":`Etapa ${next} din 5`}</span></div>
+      <div class="row" style="margin-bottom:6px"><div class="grow"><div class="eyebrow">Misiunea de azi</div>${shortDay?`<div style="font-size:13px;font-weight:700;color:var(--gold);margin-top:4px">Azi antrenamentul e mai scurt</div>`:""}</div><span class="muted" style="font-weight:700;font-size:14px">${done?"Completă":`Etapa ${pos(next)} din ${ORDER.length}`}</span></div>
       ${rows}
       <div style="margin-top:12px">${done?`<p style="margin:0;font-weight:700">Misiune completă pe azi. Revino mâine ca să crească seria.</p><p class="muted" style="margin:6px 0 0;font-size:14px">Poți rejuca orice etapă ca să-ți bați recordul.</p>`
-        :`<button class="btn big" id="startBtn">${Object.keys(rec.stages||{}).length===0?"Începe misiunea":"Continuă: etapa "+next}</button>`}</div>
+        :`<button class="btn big" id="startBtn">${Object.keys(rec.stages||{}).length===0?"Începe misiunea":"Continuă: etapa "+pos(next)}</button>`}</div>
     </div>
     <div class="nav">
       <button class="btn ghost" id="toWard">${I.shirt}Vestiar</button>
@@ -705,7 +755,7 @@ function demoVert(){
 }
 function demoXp(){const L=levelInfo(S.xp);return `<div class="row" style="justify-content:space-between;font-weight:700;font-size:14px"><span>Nivel ${L.level} · ${rankOf(L.level)}</span><span class="muted">${L.into} / ${L.need} XP</span></div><div class="xpbar"><i style="width:${Math.max(8,Math.round(L.into/L.need*100))}%"></i></div>`;}
 const TOUR=[
-  {t:"Misiunea de azi",b:"În fiecare zi ai 5 etape, pe rând. Când le termini pe toate, se aprinde flacăra și crește seria de zile.",v:()=>`<div class="demo-steps">${[1,2,3,4,5].map(n=>`<span class="num ${n<3?"d":n===3?"n":""}">${n<3?"✓":n}</span>`).join("")}</div>`},
+  {t:"Misiunea de azi",b:"În fiecare zi ai 6 etape, pe rând. Când le termini pe toate, se aprinde flacăra și crește seria de zile.",v:()=>`<div class="demo-steps">${[1,2,3,4,5,6].map(n=>`<span class="num ${n<3?"d":n===3?"n":""}">${n<3?"✓":n}</span>`).join("")}</div>`},
   {t:"Luptă pentru aur",b:"Tu ești cercul cu fața ta. Ceasul auriu merge în ritm de aur. La fiecare etapă primești o medalie: aur dacă ești rapidă și corectă, argint sau bronz dacă mai ai de lucrat. Aurul aduce cele mai multe XP.",v:()=>demoTrack()+`<div class="row" style="justify-content:center;margin-top:10px">${medalSVG(3,40)}${medalSVG(2,40)}${medalSVG(1,40)}</div>`},
   {t:"Scrie de la dreapta",b:"La numerele mari scrii ca în caiet: întâi unitățile, apoi zecile, apoi sutele. Căsuțele de sus sunt ciorna ta: atinge-le ca să marchezi împrumutul sau „1 în minte”.",v:demoVert},
   {t:"Crești în nivel",b:"Fiecare răspuns corect aduce XP. Cu fiecare nivel nou deblochezi haine, accesorii și fundaluri în Vestiar. Colecționează și insignele!",v:demoXp}
@@ -725,8 +775,8 @@ function renderGuide(){
   app.innerHTML=`<section class="screen">
     <div class="row"><div class="grow"><div class="eyebrow">Ghid</div><h1 style="font-size:28px;margin-top:4px">Cum funcționează</h1></div><button class="btn ghost small" id="back">Înapoi</button></div>
     <button class="btn gold" id="tour">Vezi turul rapid</button>
-    ${sec("Misiunea de azi",`<p>În fiecare zi ai de făcut 5 etape, în ordine:</p>
-      <ol><li><b>Calcul rapid</b>: adunări și scăderi până la 10.</li><li><b>Numărul ascuns</b>: găsești numărul care lipsește, de exemplu 2 + ? = 8.</li><li><b>Numere mari</b>: adunări și scăderi până la 1000, în coloană.</li><li><b>Detectivul numerelor</b>: numărul care lipsește, până la 1000.</li><li><b>Problema zilei</b>: o problemă de gândit.</li></ol>
+    ${sec("Misiunea de azi",`<p>În fiecare zi ai de făcut 6 etape, în ordine:</p>
+      <ol><li><b>Calcul rapid</b>: adunări și scăderi până la 10.</li><li><b>Numărul ascuns</b>: găsești numărul care lipsește, de exemplu 2 + ? = 8.</li><li><b>Numere mari</b>: adunări și scăderi până la 1000, în coloană.</li><li><b>Detectivul numerelor</b>: numărul care lipsește, până la 1000.</li><li><b>Rotunjiri</b>: rotunjești numere la zeci, sute și mii.</li><li><b>Problema zilei</b>: o problemă de gândit (sau un exercițiu cu termenii operațiilor) și o problemă despre timp.</li></ol>
       <p>Uneori mama face misiunea mai scurtă, dacă ai multe teme. Atunci unele etape apar „Liber azi”.</p>`)}
     ${sec("Seria de zile",`<p>Când termini toată misiunea, se aprinde flacăra zilei. Zilele la rând fac o <b>serie</b>. Dacă sari o zi, seria pornește de la 1.</p>
       <p>După fiecare 7 zile la rând primești un <b>scut</b>. Scutul îți salvează seria dacă ratezi o singură zi.</p>`,`<div class="streak" style="justify-content:center">${I.flame}<div class="big">${liveStreak()}</div></div>`)}
@@ -735,6 +785,13 @@ function renderGuide(){
     ${sec("Cum scrii răspunsul",`<p>Scrii cifrele cu tastatura de pe ecran și apeși <b>OK</b>. La unele exerciții alegi răspunsul dintre 3 butoane.</p>
       <p><b>La numerele mari scrii de la dreapta la stânga</b>, ca în caiet. Exemplu: 723 − 656. Scrii întâi <b>7</b> (unitățile), apoi <b>6</b> (zecile). Căsuța roz arată unde urmează să scrii.</p>
       <p><b>Căsuțele de sus</b> sunt ciorna ta. La scădere, atinge căsuța de deasupra cifrei de la care te împrumuți: apare un punct. La adunare apare „1”, când ai 1 în minte. Nu contează la punctaj, sunt doar ca să te ajute.</p>`,demoVert())}
+    ${sec("Timpul",`<p>A doua problemă a zilei este despre timp: ore, minute, zile, săptămâni, luni și ani.</p>
+      <div class="termref" style="border:0;margin:0 0 10px;padding:0"><span>1 oră = 60 de minute</span><span>1 zi = 24 de ore</span><span>1 săptămână = 7 zile</span><span>1 an = 12 luni</span></div>
+      <p>Când răspunsul este o oră, scrii doar cifrele și cele două puncte apar singure. Exemplu: pentru 18:15 apeși <b>1, 8, 1, 5</b>.</p>
+      <p><b>Exemplu:</b> Filmul începe la 17:40 și durează o oră și 35 de minute. 17:40 + 1 oră = 18:40. Încă 20 de minute = 19:00, plus 15 minute = <b>19:15</b>.</p>`)}
+    ${sec("Rotunjirea",`<p>Rotunjim un număr la cel mai apropiat număr „rotund”.</p>
+      <ol><li>Găsește cifra locului la care rotunjești (zeci, sute sau mii).</li><li>Uită-te la cifra <b>din dreapta</b> ei.</li><li>Dacă e <b>0, 1, 2, 3 sau 4</b>, rotunjim <b>în jos</b>. Dacă e <b>5, 6, 7, 8 sau 9</b>, rotunjim <b>în sus</b>.</li><li>Toate cifrele din dreapta devin 0.</li></ol>
+      <table><tbody><tr><td>347 la zeci</td><td><b>350</b></td></tr><tr><td>347 la sute</td><td><b>300</b></td></tr><tr><td>650 la sute</td><td><b>700</b></td></tr><tr><td>4.682 la mii</td><td><b>5.000</b></td></tr><tr><td>996 la zeci</td><td><b>1.000</b></td></tr></tbody></table>`)}
     ${sec("Cuvintele matematicii",`<p>Fiecare număr dintr-o operație are un nume. Le întâlnești la problema zilei.</p>
       <div class="termref" style="border:0;margin:0 0 10px;padding:0">${TERM_REF.replace('<div class="termref">','').replace(/<\/div>$/,'')}</div>
       <p><b>Cum afli numărul care lipsește:</b></p>
@@ -777,7 +834,7 @@ function renderBadges(){
 /* ---------- practice ---------- */
 function intro(n){
   const rec=todayRec().stages[n],best=S.best[n],C=cfg()[n],cnt=C.c,lim=Math.round(C.m*60);
-  modal(`<div class="eyebrow">Etapa ${n} din 5</div>
+  modal(`<div class="eyebrow">Etapa ${pos(n)} din ${ORDER.length}</div>
     <h2 style="font-size:30px">${STAGE[n].name}</h2>
     <p style="margin:0;font-weight:500" class="muted">${STAGE[n].desc}</p>
     <div class="row" style="justify-content:center;gap:8px">
@@ -787,7 +844,7 @@ function intro(n){
       ${n===5?`<span class="price">${medalSVG(3,20)} Aur</span><b>din prima, fără indiciu, ≤ ${fmt(lim*.6)}</b><span class="price">${medalSVG(2,20)} Argint</span><b>corect, ≤ ${fmt(lim)}</b>`
       :`<span class="price">${medalSVG(3,20)} Aur</span><b>≥ ${Math.ceil(cnt*.9)} din prima, ≤ ${fmt(lim*GOLD_T)}</b><span class="price">${medalSVG(2,20)} Argint</span><b>≥ ${Math.ceil(cnt*.8)} din prima, ≤ ${fmt(lim*SILVER_T)}</b>`}
     </div>
-    <p style="margin:0;font-size:15px;font-weight:500;line-height:1.5">${n===5?"Citește de două ori. Folosește o foaie pentru calcule. După un minut poți cere un indiciu.":n>=3?"Scrie rezultatul de la dreapta la stânga: unități, zeci, sute. Căsuțele de sus te ajută să marchezi împrumutul sau „1 în minte”.":"Întrece ceasul auriu până la steag ca să câștigi aur."}</p>
+    <p style="margin:0;font-size:15px;font-weight:500;line-height:1.5">${n===5?"Citește de două ori. Folosește o foaie pentru calcule. După un minut poți cere un indiciu.":n===6?"Uită-te la cifra din dreapta locului la care rotunjești: 0–4 rotunjim în jos, 5–9 rotunjim în sus. Întrece ceasul auriu!":(n===3||n===4)?"Scrie rezultatul de la dreapta la stânga: unități, zeci, sute. Căsuțele de sus te ajută să marchezi împrumutul sau „1 în minte”.":"Întrece ceasul auriu până la steag ca să câștigi aur."}</p>
     ${rec?`<p style="margin:0;font-weight:700;color:var(--gold);font-size:14px">Ai terminat deja etapa azi. Rejucând primești jumătate din XP, dar îți poți bate recordul.</p>`:""}
     <div class="row" style="justify-content:center"><button class="btn ghost" data-close>Nu acum</button><button class="btn teal" id="go">Start</button></div>`);
   document.getElementById("go").onclick=()=>{closeModal();startStage(n,!!rec);};
@@ -810,7 +867,7 @@ function renderPractice(){
       <button class="btn ghost small" id="pause" aria-label="Pauză">${I.pause}</button>
       <button class="btn ghost small" id="snd" aria-label="Sunet">${S.sound?I.sound:I.mute}</button>
     </div>
-    ${n<5?`<div class="track" aria-hidden="true"><div class="line"></div><div class="mk ghost" id="mkGhost">${I.ghost}</div><div class="mk me" id="mkMe">${avatarHead(S.profile)}</div><div class="flag">${I.flag}</div></div>
+    ${n!==5?`<div class="track" aria-hidden="true"><div class="line"></div><div class="mk ghost" id="mkGhost">${I.ghost}</div><div class="mk me" id="mkMe">${avatarHead(S.profile)}</div><div class="flag">${I.flag}</div></div>
     <div class="pace" id="pace"></div>`:""}
     <div class="qcard" id="qcard"></div>
     <div class="msg center" id="msg"></div>
@@ -836,10 +893,12 @@ function showQuestion(){
   const it=P.items[P.idx];P.input="";P.tries=0;P.locked=false;
   const q=document.getElementById("qcard");
   if(it.problem){
-    q.innerHTML=`<div class="qnum">${P.items.length>1?`Problema ${P.idx+1} din ${P.items.length}`:"Problema zilei"}</div><p class="problem">${it.text}</p><div id="hintBox"></div>
-      <div style="font-weight:700">Răspuns: <span class="answerbox slot" id="slot">&nbsp;</span> ${it.unit?`<span>${it.unit}</span>`:""}</div>
+    q.innerHTML=`<div class="qnum">${P.items.length>1?`Problema ${P.idx+1} din ${P.items.length}`:"Problema zilei"}${it.time?" · despre timp":""}</div><p class="problem">${it.text}</p><div id="hintBox"></div>
+      <div style="font-weight:700">${it.clock?"Ora":"Răspuns"}: <span class="answerbox slot" id="slot">${it.clock?"__:__":"&nbsp;"}</span> ${it.unit?`<span>${it.unit}</span>`:""}</div>
       <div><button class="btn gold small" id="hintBtn" disabled>Indiciu disponibil după 1 minut</button></div>`;
     document.getElementById("hintBtn").onclick=()=>{P.hintShown=true;document.getElementById("hintBox").innerHTML=`<div class="hint">${it.hint}</div>`;document.getElementById("hintBtn").hidden=true;act();};
+  } else if(it.round){
+    q.innerHTML=`<div class="qnum">Exercițiul ${P.idx+1} din ${P.items.length}</div><div class="rq">Rotunjește la <b>${RUNIT[it.u]}</b></div><div class="eq"><span>${it.n}</span><span>≈</span><span class="slot" id="slot">?</span></div>`;
   } else if(it.vertical){
     q.innerHTML=`<div class="qnum">Exercițiul ${P.idx+1} din ${P.items.length}</div>${vertHTML(it)}<div class="note">Scrie de la dreapta: întâi unitățile.<br>${it.parts[1]==="−"?"Atinge căsuța de sus când te împrumuți.":"Atinge căsuța de sus când ai 1 în minte."}</div>`;
     q.querySelectorAll(".mark").forEach(m=>m.onclick=()=>{const on=m.classList.toggle("on");m.firstChild.textContent=on?(it.parts[1]==="−"?"•":"1"):"";m.setAttribute("aria-pressed",on);act();});
@@ -862,13 +921,14 @@ function showQuestion(){
 }
 function typeD(d){if(P.locked)return;const it=P.items[P.idx];
   if(it.vertical){if(P.input.length>=vW(it))return;P.input=d+P.input;}
-  else{if(P.input.length>=4)return;if(P.input==="0")P.input="";P.input+=d;}
+  else{if(P.input.length>=5)return;if(P.input==="0")P.input="";P.input+=d;}
   setSlot(P.input);act();}
 function delD(){if(P.locked)return;const it=P.items[P.idx];P.input=it.vertical?P.input.slice(1):P.input.slice(0,-1);setSlot(P.input);act();}
 function act(){P.lastAct=performance.now();hideSay();}
 function setSlot(v){const s=document.getElementById("slot");if(!s)return;
   if(P.items[P.idx].vertical){const cells=[...s.querySelectorAll(".cell")],W=cells.length;cells.forEach((c,i)=>{const j=W-1-i;c.textContent=j<v.length?v[v.length-1-j]:"";c.classList.toggle("next",v.length<W&&i===W-1-v.length);});s.classList.remove("good","bad");return;}
-  s.textContent=v===""?(P.items[P.idx].problem?" ":"?"):v;s.classList.toggle("filled",v!=="");s.classList.remove("good","bad");}
+  const itc=P.items[P.idx];if(itc.clock&&v.length>2)v=v.slice(0,-2)+":"+v.slice(-2);
+  s.textContent=v===""?(itc.clock?"__:__":itc.problem?" ":"?"):v;s.classList.toggle("filled",v!=="");s.classList.remove("good","bad");}
 document.addEventListener("keydown",e=>{
   if(screen!=="practice"||!P||P.paused||P.done||document.querySelector(".overlay"))return;
   const it=P.items[P.idx];if(!it)return;
@@ -884,7 +944,8 @@ function submit(val,btn){
     P.correct++;
     if(P.tries===0){P.firstTry++;P.combo++;P.maxCombo=Math.max(P.maxCombo,P.combo);}
     if(it.borrow)P.borrowOk++;
-    const st=P.stage;P.xp+=st<=2?(P.tries===0?1:0):st<=4?(P.tries===0?2:0):([15,6,2][P.tries]||0);
+    const st=P.stage;P.xp+=st===5?([15,6,2][P.tries]||0):st<=2?(P.tries===0?1:0):(P.tries===0?2:0);
+    if(it.round&&P.tries===0)P.roundOk=(P.roundOk||0)+1;
     s.classList.add("good");m.className="msg center good";
     m.textContent=P.combo>0&&P.combo%5===0?`${P.combo} la rând!`:GOOD[R(0,GOOD.length-1)];
     beep("good");if(P.combo>0&&P.combo%10===0)say(P.combo+" la rând! +3 XP",1500);
@@ -893,9 +954,9 @@ function submit(val,btn){
     P.tries++;P.combo=0;beep("bad");s.classList.add("bad");
     const target=btn||(it.vertical?document.querySelector(".vert"):s);target.classList.remove("shake");void target.offsetWidth;target.classList.add("shake");
     if(P.tries>=maxTries){
-      m.className="msg center bad";m.textContent=`Răspunsul corect: ${it.answer}`;
+      m.className="msg center bad";m.textContent=it.round?`${it.n} e mai aproape de ${it.answer}${it.n%it.u*2===it.u?" (la jumătate rotunjim în sus)":""}`:`Răspunsul corect: ${fmtAns(it)}`;
       setSlot(String(it.answer));s.classList.remove("bad");s.classList.add("good");
-      P.missed.push(it.problem?(it.term?"Termeni: "+it.text.replace(/<[^>]+>/g,"").slice(0,70)+"… ["+it.answer+"]":"Problema "+(it.idx+1)+": ["+it.answer+"]"):eqText(it));
+      P.missed.push(it.problem?(it.time?"Timp: "+it.text.replace(/<[^>]+>/g,"").slice(0,70)+"… ["+fmtAns(it)+"]":it.term?"Termeni: "+it.text.replace(/<[^>]+>/g,"").slice(0,70)+"… ["+it.answer+"]":"Problema "+(it.idx+1)+": ["+it.answer+"]"):eqText(it));
       setTimeout(nextQ,1900);
     } else {
       m.className="msg center bad";m.textContent=it.problem?(P.tries===1?"Nu încă. Verifică fiecare pas.":"Mai ai o încercare. Citește din nou întrebarea."):"Mai încearcă o dată.";
@@ -903,7 +964,7 @@ function submit(val,btn){
     }
   }
 }
-function eqText(it){return it.parts.map((x,i)=>i===it.u?`[${x}]`:x).join(" ");}
+function eqText(it){if(it.round)return `${it.n} la ${RUNIT[it.u]} [${it.answer}]`;return it.parts.map((x,i)=>i===it.u?`[${x}]`:x).join(" ");}
 function nextQ(){P.idx++;if(P.idx>=P.items.length){finishStage();return;}showQuestion();}
 
 /* timer */
@@ -941,7 +1002,7 @@ function finishStage(){
   stopTimer();P.done=true;
   const n=P.stage,tot=P.items.length,lim=P.limit,t=Math.round(P.elapsed),inTime=t<=lim;
   const prevBest=S.best[n],L0=levelInfo(S.xp).level;
-  const record=n<5&&P.isDef&&P.correct===tot&&P.firstTry>=tot*.7&&(prevBest==null||t<prevBest);
+  const record=n!==5&&P.isDef&&P.correct===tot&&P.firstTry>=tot*.7&&(prevBest==null||t<prevBest);
   const combos=Math.floor(P.maxCombo/10);
   const medal=medalOf(n,P.firstTry,P.correct,tot,t,lim,P.hintShown);
   const lines=[];let xp;
@@ -954,29 +1015,29 @@ function finishStage(){
   }
   if(record){S.best[n]=t;if(prevBest!=null)S.stats.records++;}
   if(!P.replay&&medal===3)S.stats.gold++;
-  if(n===1&&P.isDef&&t<=75&&P.firstTry>=23)S.stats.fast++;
-  S.stats.borrow+=P.borrowOk;if(n===5){S.stats.problems+=P.correct;S.stats.problemsFirst+=P.firstTry;}
+  if(n===1&&P.isDef&&t<=60&&P.firstTry>=18)S.stats.fast++;
+  S.stats.borrow+=P.borrowOk;S.stats.round=(S.stats.round||0)+(P.roundOk||0);if(n===5){S.stats.problems+=P.correct;S.stats.problemsFirst+=P.firstTry;}
   const rec=todayRec();
   if(!P.replay||!rec.stages[n])rec.stages[n]={c:P.firstTry,ok:P.correct,n:tot,t,lim,xp,medal,missed:P.missed.slice(0,12),hint:n===5?P.hintShown:undefined};
-  if(n===5&&!P.replay)S.problemIdx+=tot;
+  if(n===5&&!P.replay)S.problemIdx+=1;
   const C=cfg();
   let dayReward=null;
-  if([1,2,3,4,5].every(k=>rec.stages[k]||C[k].c===0)&&!rec.done){rec.done=true;dayReward=completeDay(rec);xp+=dayReward.xp;lines.push(["Misiunea zilei completă",dayReward.xp]);}
+  if(ORDER.every(k=>rec.stages[k]||C[k].c===0)&&!rec.done){rec.done=true;dayReward=completeDay(rec);xp+=dayReward.xp;lines.push(["Misiunea zilei completă",dayReward.xp]);}
   S.xp+=xp;
   const badges=newBadges();
   const L1=levelInfo(S.xp);
   save();
   document.getElementById("coach").hidden=true;
-  let next=n+1;while(next<=5&&(rec.stages[next]||C[next].c===0))next++;if(next>5)next=null;
+  let next=ORDER.slice(ORDER.indexOf(n)+1).find(k=>!rec.stages[k]&&C[k].c>0)||null;
   beep("win");
   app.innerHTML=`<section class="screen"><div class="panel screen center" style="gap:14px;padding:24px 18px">
-    <div class="eyebrow">Etapa ${n} · ${STAGE[n].name}</div>
+    <div class="eyebrow">Etapa ${pos(n)} · ${STAGE[n].name}</div>
     <div class="medalbig">${medalSVG(medal,76)}<div><div class="eyebrow">Medalie</div><div style="font-size:26px;font-weight:900;color:${MEDALS[medal].c}">${MEDALS[medal].name}</div></div></div>
     <div class="xpbig">+${xp} XP</div>
     <div class="stat" style="max-width:380px;margin:0 auto;width:100%">
       <span>${n===5?"Rezolvate":"Corecte din prima"}</span><b>${n===5?P.correct+" / "+tot:P.firstTry+" / "+tot}</b>
       <span>Timp</span><b>${fmt(t)} <span class="muted" style="font-weight:600">/ ${fmt(lim)}</span></b>
-      ${n<5?`<span>Record</span><b>${S.best[n]!=null?fmt(S.best[n]):"–"}</b>`:""}
+      ${n!==5?`<span>Record</span><b>${S.best[n]!=null?fmt(S.best[n]):"–"}</b>`:""}
       ${lines.map(([l,v])=>`<span class="muted">${l}</span><b class="xp">+${v}</b>`).join("")}
     </div>
     <div style="max-width:380px;margin:0 auto;width:100%;text-align:left">
@@ -986,7 +1047,7 @@ function finishStage(){
     ${record?`<p style="margin:0;font-weight:800;color:var(--teal)">${prevBest==null?"Primul tău record la această etapă!":"Record nou! Mai rapidă ca data trecută."}</p>`:""}
     ${medal<3?`<p class="muted" style="margin:0;font-weight:600;font-size:15px">${nextMedalTip(n,medal,tot,lim)}</p>`:`<p style="margin:0;font-weight:700;color:var(--gold)">Aur! Ai lucrat rapid și corect.</p>`}
     <div class="row" style="justify-content:center">
-      ${next&&!P.replay&&!dayReward?`<button class="btn big teal" id="nextSt">Etapa ${next}</button>`:""}
+      ${next&&!P.replay&&!dayReward?`<button class="btn big teal" id="nextSt">Etapa ${pos(next)}: ${STAGE[next].name}</button>`:""}
       <button class="btn ghost" id="home">Acasă</button>
     </div></div></section>`;
   const ns=document.getElementById("nextSt");if(ns)ns.onclick=()=>{P=null;intro(next);};
@@ -1034,7 +1095,7 @@ function completeDay(rec){
     else st.count=1;
     st.lastDay=t;st.best=Math.max(st.best,st.count);
   }
-  const fullDay=[1,2,3,4,5].every(k=>cfg()[k].c>=DEF_CFG[k].c);
+  const fullDay=ORDER.every(k=>cfg()[k].c>=DEF_CFG[k].c);
   if(rec&&fullDay){const v=Object.values(rec.stages);if(v.length&&v.every(x=>x.medal===3))S.stats.goldDay++;if(v.length&&v.every(x=>x.c===x.n))S.stats.perfectDay++;}
   const r={xp:15,week:false,shield:usedShield,count:st.count};
   if(st.count%7===0){r.week=true;r.xp+=40;S.shields=Math.min(3,S.shields+1);}
@@ -1060,13 +1121,13 @@ function renderParent(){
       <span>Scuturi disponibile</span><b>${S.shields}</b>
       <span>Probleme rezolvate corect</span><b>${S.stats.problems}</b>
       <span>Scăderi cu împrumut corecte</span><b>${S.stats.borrow}</b>
-      ${[1,2,3,4].map(n=>`<span>Record etapa ${n} (${DEF_CFG[n].c} ex. / ${fmt(DEF_CFG[n].m*60)})</span><b>${S.best[n]!=null?fmt(S.best[n]):"–"}</b>`).join("")}
+      ${[1,2,3,4,6].map(n=>`<span>Record etapa ${pos(n)} (${DEF_CFG[n].c} ex. / ${fmt(DEF_CFG[n].m*60)})</span><b>${S.best[n]!=null?fmt(S.best[n]):"–"}</b>`).join("")}
     </div></div>
     ${settingsCard()}
     <div class="panel"><h3 style="font-size:19px;margin-bottom:6px">Ultimele zile</h3>
       <p class="muted" style="margin:0 0 8px;font-size:13px">Corecte din prima / total, apoi timpul. ⏱ = a depășit timpul propus.</p>
-      <div class="tblwrap"><table><thead><tr><th>Ziua</th><th>E1</th><th>E2</th><th>E3</th><th>E4</th><th>Probl.</th></tr></thead><tbody>
-      ${keys.length?keys.map(k=>{const d=S.days[k],st=d.stages||{};return `<tr><td><b>${k.slice(8)}.${k.slice(5,7)}</b>${d.done?" ✓":""}</td>${[1,2,3,4,5].map(n=>`<td>${cell(st[n])}</td>`).join("")}</tr>`;}).join(""):`<tr><td colspan="6" class="muted">Încă nu există antrenamente.</td></tr>`}
+      <div class="tblwrap"><table><thead><tr><th>Ziua</th><th>E1</th><th>E2</th><th>E3</th><th>E4</th><th>Rot.</th><th>Probl.</th></tr></thead><tbody>
+      ${keys.length?keys.map(k=>{const d=S.days[k],st=d.stages||{};return `<tr><td><b>${k.slice(8)}.${k.slice(5,7)}</b>${d.done?" ✓":""}</td>${ORDER.map(n=>`<td>${cell(st[n])}</td>`).join("")}</tr>`;}).join(""):`<tr><td colspan="7" class="muted">Încă nu există antrenamente.</td></tr>`}
       </tbody></table></div></div>
     <div class="panel"><h3 style="font-size:19px;margin-bottom:8px">Greșeli din ultimele 7 zile</h3>
       ${missed.length?`<div class="opts">${missed.slice(0,40).map(m=>`<span class="chip">${esc(m)}</span>`).join("")}</div><p class="muted" style="font-size:13px;margin:8px 0 0">Între paranteze: răspunsul corect.</p>`:`<p class="muted" style="margin:0">Nicio greșeală înregistrată.</p>`}
@@ -1085,7 +1146,7 @@ function settingsCard(){
   return `<div class="panel"><h3 style="font-size:19px;margin-bottom:6px">Antrenamentul zilnic</h3>
     <p class="muted" style="margin:0 0 10px;font-size:13px;line-height:1.45">Pentru zilele cu multe teme poți micșora antrenamentul. Pune 0 ca să sari peste o etapă. Seria continuă dacă Sofia termină ce ai setat. Recordurile se numără doar cu valorile inițiale.</p>
     <div class="tblwrap"><table><thead><tr><th>Etapa</th><th>Exerciții</th><th>Minute</th></tr></thead><tbody>
-    ${[1,2,3,4,5].map(n=>`<tr><td><b>${n}</b> ${STAGE[n].name}<br><span class="muted" style="font-size:12px">inițial: ${DEF_CFG[n].c} / ${DEF_CFG[n].m} min</span></td>
+    ${ORDER.map(n=>`<tr><td><b>${pos(n)}</b> ${STAGE[n].name}<br><span class="muted" style="font-size:12px">inițial: ${DEF_CFG[n].c} / ${DEF_CFG[n].m} min</span></td>
       <td><input class="num" type="number" inputmode="numeric" id="cfgc${n}" min="0" max="${MAXC[n]}" step="1" value="${C[n].c}" aria-label="Exerciții etapa ${n}"></td>
       <td><input class="num" type="number" inputmode="decimal" id="cfgm${n}" min="0.5" max="15" step="0.5" value="${C[n].m}" aria-label="Minute etapa ${n}"></td></tr>`).join("")}
     </tbody></table></div>
@@ -1095,11 +1156,11 @@ function settingsCard(){
     ${isToday?`<button class="btn ghost small" id="cfgClearToday" style="margin-top:8px">Anulează setările de azi</button>`:""}
   </div>`;
 }
-function readCfg(){const o={};let any=false;for(let n=1;n<=5;n++){let c=parseInt(document.getElementById("cfgc"+n).value,10);let m=parseFloat(String(document.getElementById("cfgm"+n).value).replace(",","."));
+function readCfg(){const o={};let any=false;for(const n of ORDER){let c=parseInt(document.getElementById("cfgc"+n).value,10);let m=parseFloat(String(document.getElementById("cfgm"+n).value).replace(",","."));
   if(!isFinite(c))c=0;c=Math.max(0,Math.min(MAXC[n],c));if(!isFinite(m))m=DEF_CFG[n].m;m=Math.max(.5,Math.min(15,Math.round(m*2)/2));o[n]={c,m};if(c>0)any=true;}
   return any?o:null;}
-function fillCfg(o){for(let n=1;n<=5;n++){document.getElementById("cfgc"+n).value=o[n].c;document.getElementById("cfgm"+n).value=o[n].m;}}
-function checkDayAfterCfg(){const rec=S.days[today()];if(!rec||rec.done||!Object.keys(rec.stages||{}).length)return null;const C=cfg();if([1,2,3,4,5].every(k=>rec.stages[k]||C[k].c===0)){rec.done=true;const r=completeDay(rec);S.xp+=r.xp;newBadges();return r;}return null;}
+function fillCfg(o){for(const n of ORDER){document.getElementById("cfgc"+n).value=o[n].c;document.getElementById("cfgm"+n).value=o[n].m;}}
+function checkDayAfterCfg(){const rec=S.days[today()];if(!rec||rec.done||!Object.keys(rec.stages||{}).length)return null;const C=cfg();if(ORDER.every(k=>rec.stages[k]||C[k].c===0)){rec.done=true;const r=completeDay(rec);S.xp+=r.xp;newBadges();return r;}return null;}
 function bindSettings(){
   const msg=t=>{document.getElementById("cfgMsg").textContent=t;};
   document.getElementById("cfgBusy").onclick=()=>fillCfg(BUSY_CFG);
